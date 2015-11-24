@@ -28,15 +28,18 @@ foreach my $file (@filesToDownload) {
 	my @parts = split(m|/|, $file);
 	my $filename = $parts[$#parts];
 	if (not -e $downloadSubDir.$filename) {
-		print "downloading '".$downloadSubDir.$filename."': ...";
+		print "downloading '".$filename."': ...";
 		qx(wget -q -O $downloadSubDir$filename $file);
 		qx(date +"%Y.%m.%d" > $downloadSubDir/$filename.date);
 		print " done.\n";
 	}
 	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/nodes.dmp")) {
+		print "extracting '".$filename."': ...";
 		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename nodes.dmp);
+		print " done.\n";
 	}
 }
+die;
 
 ##Phase 1 grep all accession number from the species2genomes file of metaphlan and try to obtain according taxids from various sources, i.e. ftp downloads from NCBI for current accessions, produce id lists for Batch Entrez manual download for outdated accessions plus successive parsing of the retrieved XML files, look up in a manual.txt file for the few remaining accessions which must be found somewhere in the internet
 my %ids = %{findspeciesaccessions($filename_species2genomes, $WORKDIR, $downloadSubDir)};
