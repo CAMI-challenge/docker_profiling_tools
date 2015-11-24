@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES mercurial python-numpy python-biom-format bowtie2
+ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 
@@ -20,5 +20,16 @@ RUN echo "[hostfingerprints]" >> ~/.hgrc && echo "bitbucket.org = 46:de:34:e7:9b
 #download the latest version of MetaPhlAn2
 RUN hg clone https://bitbucket.org/biobakery/metaphlan2 ${PREFIX}/src/metaphlan2
 
+#metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
+ENV MAPPERNAME IDmapper
+ENV MAPPERRESULT ${PREFIX}/share/${MAPPERNAME}/mappingresults.txt
 
+ADD buildIDlists.pl convertOutput.pl Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD workdir/Assembly_result.xml workdir/bioproject_result.xml workdir/manual.txt ${PREFIX}/share/${MAPPERNAME}/workdir/
+
+#run the one time mapping from "species2genomes.txt" into NCBI taxids and store the result in $MAPPERRESULT
+#since the NCBI taxonomy is not static, it might happen that some taxids are no longer used, i.e. the following program crashes. Try to manually update the XML files via the NCBI batch entrez system.
+RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/buildIDlists.pl ${PREFIX}/src/metaphlan2/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 
+#should the previous command be successful, temporary files in workdir can be deleted
+#RUN rm -rf ${PREFIX}/share/{$MAPPERNAME}/workdir
 
