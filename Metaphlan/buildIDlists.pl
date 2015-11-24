@@ -34,12 +34,16 @@ foreach my $file (@filesToDownload) {
 		print " done.\n";
 	}
 	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/nodes.dmp")) {
-		print "extracting '".$filename."': ...";
+		print "extracting 'nodes.dmp' from '".$filename."': ...";
 		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename nodes.dmp);
 		print " done.\n";
 	}
+	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/names.dmp")) {
+		print "extracting 'names.dmp' from '".$filename."': ...";
+		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename names.dmp);
+		print " done.\n";
+	}
 }
-die;
 
 ##Phase 1 grep all accession number from the species2genomes file of metaphlan and try to obtain according taxids from various sources, i.e. ftp downloads from NCBI for current accessions, produce id lists for Batch Entrez manual download for outdated accessions plus successive parsing of the retrieved XML files, look up in a manual.txt file for the few remaining accessions which must be found somewhere in the internet
 my %ids = %{findspeciesaccessions($filename_species2genomes, $WORKDIR, $downloadSubDir)};
@@ -49,6 +53,9 @@ my %taxonomy = %{read_taxonomytree($WORKDIR.'/nodes.dmp')};
 my %genomes = ();
 foreach my $type (sort keys(%ids)) {
 	foreach my $id (keys(%{$ids{$type}})) {
+		if (not defined $ids{$type}->{$id}) {
+			die "there are undefined IDs of type '$type' after phase 1. You should consider deleting the xml files and download fresh ones via NCBI batch entrez!\n";
+		}
 		my $taxid = $ids{$type}->{$id};
 		my $lineage = getLineage($taxid, \%taxonomy);
 		$genomes{$id} = $lineage;
@@ -113,6 +120,7 @@ sub addNamesToLineage {
 sub getLineage {
 	my ($taxid, $taxonomy) = @_;
 	
+	return [] if (not defined $taxid);
 	my @lineage = ({taxid => $taxid, rank => $taxonomy->{$taxid}->{rank}});
 	while ($lineage[0]->{taxid} != 1) {
 		unshift @lineage, {
@@ -145,7 +153,7 @@ sub read_taxonomyNames {
 	
 	my %names = ();
 	print STDERR "reading taxonomy names ...";
-	open (IN, $filename_namesdmp) || die;
+	open (IN, $filename_namesdmp) || die "cannot read file '$filename_namesdmp': $!";
 		while (my $line = <IN>) {
 			my ($taxid, $name_txt, $unique_name, $name_class) = split(m/\n|\s*\|\s*/, $line);
 			if ($name_class eq 'scientific name') {
@@ -283,7 +291,8 @@ sub findspeciesaccessions {
 There are three ways to inform this program about taxon mappings:
 1) by downloading current NCBI files via FTP (already done automatically)
 2) by providing manual mappings via the file 'manual.txt'
-3) by using the NCBI batch entrez system in an semi-automatic way:
+3) by using the NCBI batch entrez system in an semi-automatic way
+   http://www.ncbi.nlm.nih.gov/sites/batchentrez:
    Files holding the unknown IDs have been created. You must upload those to the
    Batch Entrez system, select all fetched entries and download them as XML 
    file. Merge XML files, if multiple downloads are necessary, due to a limit of
