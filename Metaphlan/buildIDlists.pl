@@ -28,7 +28,7 @@ foreach my $file (@filesToDownload) {
 	my @parts = split(m|/|, $file);
 	my $filename = $parts[$#parts];
 	if (not -e $downloadSubDir.$filename) {
-		qx(wget -O $downloadSubDir$filename $file);
+		qx(wget -q -O $downloadSubDir$filename $file);
 		qx(date +"%Y.%m.%d" > $downloadSubDir/$filename.date);
 	}
 	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/nodes.dmp")) {
@@ -206,7 +206,7 @@ sub findspeciesaccessions {
 		}
 	close (IN);
 
-	open (IN, $WORKDIR."/manual.txt") || die;
+	open (IN, $WORKDIR."/manual.txt") || die "cannot open file '$WORKDIR/manual.txt@: $!";
 		while (my $line = <IN>) {
 			my ($accession, $taxid) = split(m/\t|\n/, $line);
 			foreach my $type (keys(%ids)) {
