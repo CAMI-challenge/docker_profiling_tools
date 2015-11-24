@@ -31,10 +31,10 @@ my %metaphlanTree = ('children', undef);
 open (IN, $filename_metaphlanoutput) || die;
 	while (my $line = <IN>) {
 		next if ($line =~ m/^#/);
+		next if ($line !~ m/^k\_\_/); #there might pop up a line holding the "Identifier" of the sample, but it looks like there is no comment symbol. Thus, I relay on the fact that every lineage should start with the superkingdom, i.e. ^k__
 		my ($lineageString, $abundance) = split(m/\t|\n/, $line);
 		my @lineage = split(m/\|/, $lineageString);
 		addLineage(\%metaphlanTree, \@lineage, $abundance);
-		
 	}
 close (IN);
 
@@ -48,7 +48,7 @@ foreach my $taxon (sort @abundanceLeaves) {
 		addNCBILineage(\%NCBItax, $markerIDs{$taxon->{name}}, $taxon->{abundance});
 	} else {
 		#species is unclassified, thus we find some "genus" which is not in the known IDs. Genus name is identical to species first word, thus we look for all species containing genus name and look for the deepest common taxid
-		my ($genusName) = ($taxon->{name} =~ m/^g__(.+?)$/);
+		my ($genusName) = ($taxon->{name} =~ m/^g\_\_(.+?)$/);
 		my @lineages = ();
 		foreach my $ID (keys(%markerIDs)) {
 			if ($ID =~ m/^s\_\_$genusName/) {
@@ -213,7 +213,7 @@ sub printLeafAbundances {
 	foreach my $childName (keys(%{$tree->{children}})) {
 		if ((exists $tree->{children}->{$childName}->{realAbd}) && ($tree->{children}->{$childName}->{realAbd} != 0)) {
 			my $taxName = $childName;
-			$taxName =~ s/^t__//;
+			$taxName =~ s/^t\_\_//;
 			push @leaves, {name => $taxName, abundance => $tree->{children}->{$childName}->{realAbd}, lineage => $lineage."|".$childName};
 		}
 		if (exists $tree->{children}->{$childName}->{children}) {
@@ -229,7 +229,7 @@ sub assignRealAbundance {
 	
 	$tree->{realAbd} = 0;
 	foreach my $childName (keys(%{$tree->{children}})) {
-		if ($childName =~ m/_unclassified$/) {
+		if ($childName =~ m/\_unclassified$/) {
 			$tree->{realAbd} += $tree->{children}->{$childName}->{abundance};
 			$tree->{children}->{$childName}->{realAbd} = 0;
 			#~ if ($childName !~ m/^t__/) {
