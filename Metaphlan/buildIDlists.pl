@@ -28,8 +28,10 @@ foreach my $file (@filesToDownload) {
 	my @parts = split(m|/|, $file);
 	my $filename = $parts[$#parts];
 	if (not -e $downloadSubDir.$filename) {
+		print "downloading '".$downloadSubDir.$filename."': ...";
 		qx(wget -q -O $downloadSubDir$filename $file);
 		qx(date +"%Y.%m.%d" > $downloadSubDir/$filename.date);
+		print " done.\n";
 	}
 	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/nodes.dmp")) {
 		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename nodes.dmp);
