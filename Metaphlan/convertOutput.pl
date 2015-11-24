@@ -6,7 +6,13 @@ use Data::Dumper;
 use Utils;
 
 our @RANKS = ('superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain');
-my ($filename_taxids, $filename_metaphlanoutput, $ncbi_taxonomy) = @ARGV;
+my ($filename_taxids, $filename_metaphlanoutput) = @ARGV;
+die "usage: perl $1 <mapping-file> <metaphylan result file> <NCBI taxonomy file>
+  mapping-file: the file holding the one to one mappings from GreenGene to NCBI,
+                which should have been created by 'buildIDlists.pl'.
+
+  metaphylan result file: the original result of a metaphylan2 run.\n" if (@ARGV != 2);
+
 
 my %markerIDs = ();
 my $taxonomydate = undef;
