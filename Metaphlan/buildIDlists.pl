@@ -206,7 +206,7 @@ sub findspeciesaccessions {
 		}
 	close (IN);
 
-	open (IN, $WORKDIR."/manual.txt") || die "cannot open file '$WORKDIR/manual.txt@: $!";
+	open (IN, $WORKDIR."/manual.txt") || die "cannot open file '$WORKDIR/manual.txt': $!";
 		while (my $line = <IN>) {
 			my ($accession, $taxid) = split(m/\t|\n/, $line);
 			foreach my $type (keys(%ids)) {
