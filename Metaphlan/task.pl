@@ -42,7 +42,8 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 						#call for contig as inputs
 						$resultfilename .= "contig.txt";
 					}
-					my $commonTail = "--output_file ".$resultfilename." \"$line\" && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convertOutput.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename > $resultfilename.profile";
+					my $commonTail = "--output_file ".$resultfilename." \"$line\" ";
+					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convertOutput.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"$id\" > $resultfilename.profile";
 					push @tasks, $commonHead.$commonTail;
 				}
 			}
