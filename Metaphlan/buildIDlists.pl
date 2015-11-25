@@ -123,7 +123,6 @@ sub findspeciesaccessions {
 					$ids{bioproject}->{$id} = undef;
 				} elsif ($id =~ m/XXX/) {
 					$ids{exception}->{$id} = undef;
-					#~ print STDERR "known strange ID '$id'\n";
 				} else {
 					print Dumper $id;
 					die;

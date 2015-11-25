@@ -95,9 +95,6 @@ foreach my $taxon (sort @abundanceLeaves) {
 	}
 }
 
-#~ Utils::screenNCBItaxonomyNames($dirWithNCBItaxDump, \@missingTaxa);
-#~ die;
-
 markStrains(\%NCBItax);
 pruneUnwantedRanks(\%NCBItax);
 
@@ -257,10 +254,6 @@ sub assignRealAbundance {
 		if ($childName =~ m/\_unclassified$/) {
 			$tree->{realAbd} += $tree->{children}->{$childName}->{abundance};
 			$tree->{children}->{$childName}->{realAbd} = 0;
-			#~ if ($childName !~ m/^t__/) {
-				#~ $tree->{inherited} = 
-				#~ print STDERR "non t__: $childName\n";
-			#~ }
 		} else {
 			$tree->{children}->{$childName}->{realAbd} = $tree->{children}->{$childName}->{abundance};
 		}
@@ -279,7 +272,6 @@ sub addNCBILineage {
 		} else {
 			$tree->{children}->{$lineage->[0]->{taxid}}->{abundance} += $abundance;
 		}
-		#~ print "TA: ".$abundance."\n";
 	} else {
 		if (not exists $tree->{children}->{$lineage->[0]->{taxid}}) {
 			$tree->{children}->{$lineage->[0]->{taxid}} = {children => undef, rank => $lineage->[0]->{rank}};
@@ -330,5 +322,3 @@ sub getRank {
 	
 	return undef;
 }
-
-
