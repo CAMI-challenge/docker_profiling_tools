@@ -49,7 +49,7 @@ foreach my $file (@filesToDownload) {
 my %ids = %{findspeciesaccessions($filename_species2genomes, $WORKDIR, $downloadSubDir)};
 
 ## Phase 2: given the taxIDs we now need to get the "lineage" from the NCBI taxonomy
-my %taxonomy = %{read_taxonomytree($WORKDIR.'/nodes.dmp')};
+my %taxonomy = %{Utils::read_taxonomytree($WORKDIR.'/nodes.dmp')};
 my %genomes = ();
 foreach my $type (sort keys(%ids)) {
 	foreach my $id (keys(%{$ids{$type}})) {
@@ -57,7 +57,7 @@ foreach my $type (sort keys(%ids)) {
 			die "there are undefined IDs of type '$type' after phase 1. You should consider deleting the xml files and download fresh ones via NCBI batch entrez!\n";
 		}
 		my $taxid = $ids{$type}->{$id};
-		my $lineage = getLineage($taxid, \%taxonomy);
+		my $lineage = Utils::getLineage($taxid, \%taxonomy);
 		$genomes{$id} = $lineage;
 	}
 }
@@ -83,87 +83,30 @@ open (IN, $filename_species2genomes) || die;
 			#currently (13.11.2015) there are 34 "species" in the species2genomes file, which have genomes that acutally point to different species tax-ids. Thus, we here search for the longest common part in the according lineages.
 			my @lineages = ();
 			foreach my $taxid (keys(%collectedTaxIDs)) {
-				push @lineages, getLineage($taxid, \%taxonomy);
+				push @lineages, Utils::getLineage($taxid, \%taxonomy);
 			}
 			$species{$species} = Utils::getCommonLineage(\@lineages);
 			print STDERR "species '$species' is represented by $numGenomes genomes, which point to ".scalar(keys(%collectedTaxIDs))." DIFFERENT species tax-ids. Lowest common taxid is selected instead.\n";
 		} else {
 			my @taxids = keys(%collectedTaxIDs);
-			$species{$species} = getLineage($taxids[0], \%taxonomy);
+			$species{$species} = Utils::getLineage($taxids[0], \%taxonomy);
 		}
 	}
 close (IN);
 
 ## last Phase: present collected results as a text file
-my %taxonomyNames = %{read_taxonomyNames($WORKDIR.'/names.dmp')};
+my %taxonomyNames = %{Utils::read_taxonomyNames($WORKDIR.'/names.dmp')};
 my $date = qx(cat $downloadSubDir/taxdump.tar.gz.date); chomp $date;
 print "#NCBI taxonomy downloaded at '".$date."'\n";
 foreach my $id (sort keys(%genomes)) {
 	my @lineage = @{$genomes{$id}};
-	addNamesToLineage(\@lineage, \%taxonomyNames);
+	Utils::addNamesToLineage(\@lineage, \%taxonomyNames);
 	print $id."\t".$lineage[$#lineage]->{taxid}."\t".Utils::printLineage(\@lineage)."\n";
 }
 foreach my $id (sort keys(%species)) {
 	my @lineage = @{$species{$id}};
-	addNamesToLineage(\@lineage, \%taxonomyNames);
+	Utils::addNamesToLineage(\@lineage, \%taxonomyNames);
 	print $id."\t".$lineage[$#lineage]->{taxid}."\t".Utils::printLineage(\@lineage)."\n";
-}
-
-sub addNamesToLineage {
-	my ($lineage, $names) = @_;
-	
-	for (my $i = 0; $i < @{$lineage}; $i++) {
-		$lineage->[$i]->{name} = $names->{$lineage->[$i]->{taxid}};
-	}
-}
-
-sub getLineage {
-	my ($taxid, $taxonomy) = @_;
-	
-	return [] if (not defined $taxid);
-	my @lineage = ({taxid => $taxid, rank => $taxonomy->{$taxid}->{rank}});
-	while ($lineage[0]->{taxid} != 1) {
-		unshift @lineage, {
-			taxid => $taxonomy->{$lineage[0]->{taxid}}->{parent}, 
-			rank => $taxonomy->{$taxonomy->{$lineage[0]->{taxid}}->{parent}}->{rank}
-		};
-	}
-	
-	return \@lineage;
-}
-
-sub read_taxonomytree {
-	my ($filename_nodesdmp) = @_;
-	
-	my %taxonomy = ();
-	print STDERR "reading taxonomy ...";
-	open (IN, $filename_nodesdmp) || die;
-		while (my $line = <IN>) {
-			my ($taxid, $parent_taxid, $rank) = split(m/\n|\s*\|\s*/, $line);
-			$taxonomy{$taxid} = {rank => $rank, parent => $parent_taxid};
-		}
-	close (IN);
-	print STDERR " done.\n";
-	
-	return \%taxonomy;
-}
-
-sub read_taxonomyNames {
-	my ($filename_namesdmp) = @_;
-	
-	my %names = ();
-	print STDERR "reading taxonomy names ...";
-	open (IN, $filename_namesdmp) || die "cannot read file '$filename_namesdmp': $!";
-		while (my $line = <IN>) {
-			my ($taxid, $name_txt, $unique_name, $name_class) = split(m/\n|\s*\|\s*/, $line);
-			if ($name_class eq 'scientific name') {
-				$names{$taxid} = $name_txt;
-			}
-		}
-	close (IN);
-	print STDERR " done.\n";
-
-	return \%names;
 }
 
 sub findspeciesaccessions {

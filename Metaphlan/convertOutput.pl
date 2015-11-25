@@ -6,13 +6,19 @@ use Data::Dumper;
 use Utils;
 
 our @RANKS = ('superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain');
-my ($filename_taxids, $filename_metaphlanoutput) = @ARGV;
-die "usage: perl $1 <mapping-file> <metaphylan result file> <NCBI taxonomy file>
+my ($filename_taxids, $filename_metaphlanoutput, $dirWithNCBItaxDump, $sampleIDname) = @ARGV;
+die "usage: perl $1 <mapping-file> <metaphylan result file> <NCBI dump> [sampleID]
   mapping-file: the file holding the one to one mappings from GreenGene to NCBI,
                 which should have been created by 'buildIDlists.pl'.
 
-  metaphylan result file: the original result of a metaphylan2 run.\n" if (@ARGV != 2);
+  metaphylan result file: the original result of a metaphylan2 run.
+  
+  NCBI dump: must point to the directory that holds the unpacked dump 
+             of the NCBI taxonomy, or more precise: the two files
+             nodes.dmp and names.dmp
 
+  sampleID: optional. Set a sample name.\n" if ((@ARGV < 3) || (@ARGV	 > 4));
+$sampleIDname = "unknown" if (not defined $sampleIDname);
 
 my %markerIDs = ();
 my $taxonomydate = undef;
@@ -41,37 +47,56 @@ close (IN);
 assignRealAbundance(\%metaphlanTree); #handle cases where a strain like "t__Ruminococcus_gnavus_unclassified" with its abundance points in reality to the according species, i.e. "s__Ruminococcus_gnavus". That might happen on all taxonomic ranks
 my @abundanceLeaves = @{printLeafAbundances(\%metaphlanTree)}; #collect all those leaves and maybe branches of the GreenGene tree that holds a "realAbd"
 
+my %NCBItaxonomy = ();
+my %NCBInames = ();
 my %NCBItax = ('children', undef, 'rank', 'wholeTree', 'name', 'NCBItaxonomy');
 my $idMismappings = -1;
+my @missingTaxa = ();
 foreach my $taxon (sort @abundanceLeaves) {
 	if (exists $markerIDs{$taxon->{name}}) {
 		addNCBILineage(\%NCBItax, $markerIDs{$taxon->{name}}, $taxon->{abundance});
 	} else {
 		#species is unclassified, thus we find some "genus" which is not in the known IDs. Genus name is identical to species first word, thus we look for all species containing genus name and look for the deepest common taxid
-		my ($genusName) = ($taxon->{name} =~ m/^g\_\_(.+?)$/);
 		my @lineages = ();
-		foreach my $ID (keys(%markerIDs)) {
-			if ($ID =~ m/^s\_\_$genusName/) {
-				#problems occure if it's a virus living in that species. Thus, we add only those lineages that contain the rank "genus"
-				my $candidate = $markerIDs{$ID};
-				my $candidateSuperkingdom = getRank($candidate, "superkingdom");
-				if ((defined $candidateSuperkingdom) && ((($taxon->{lineage} =~ m/k\_\_Bacteria/) && ($candidateSuperkingdom == 2)) || (($taxon->{lineage} =~ m/k\_\_Viruses/) && ($candidateSuperkingdom == 10239)))) {
-					push @lineages, $candidate;
+		my ($genusName) = ($taxon->{name} =~ m/^g\_\_(.+?)$/);
+		if (defined $genusName) {
+			foreach my $ID (keys(%markerIDs)) {
+				if ($ID =~ m/^s\_\_$genusName/) {
+					#problems occure if it's a virus living in that species. Thus, we add only those lineages that contain the rank "genus"
+					my $candidate = $markerIDs{$ID};
+					my $candidateSuperkingdom = getRank($candidate, "superkingdom");
+					if ((defined $candidateSuperkingdom) && ((($taxon->{lineage} =~ m/k\_\_Bacteria/) && ($candidateSuperkingdom == 2)) || (($taxon->{lineage} =~ m/k\_\_Viruses/) && ($candidateSuperkingdom == 10239)))) {
+						push @lineages, $candidate;
+					}
 				}
 			}
 		}
+				
 		if (@lineages > 0) {
 			my @commonLineage = @{Utils::getCommonLineage(\@lineages)};
 			addNCBILineage(\%NCBItax, \@commonLineage, $taxon->{abundance})
 		} else {
-			print STDERR "warnings: could not find a NCBI taxid for '".$taxon->{name}."'. Abundance is added to class 'unassigned'.\n";
-			if (not exists $NCBItax{children}->{-1}) {
-				$NCBItax{children}->{-1} = {rank => 'unassigned', name => 'unassigned'};
+			#eine weiter Quelle um Namen den NCBI taxIDs zuzuordnen würde sich an Peter Hofmanns Idee orientieren und die textuellen Namen aus der names.dmp mit den hier auftauchenden Begriffen vergleichen. Dann könnte man die Lineage aufbauen und gucken, ob der Rang stimmt. Gabe neue Abhängikeiten zu names.dmp und nodes.dmp
+			%NCBItaxonomy = %{Utils::read_taxonomytree($dirWithNCBItaxDump."/nodes.dmp")} if (scalar(keys(%NCBItaxonomy)) == 0);
+			my @guessedLineage = @{Utils::guessByName($taxon, \%NCBItaxonomy, $dirWithNCBItaxDump."/names.dmp")};
+			if (@guessedLineage > 0) {
+				%NCBInames = %{Utils::read_taxonomyNames($dirWithNCBItaxDump."/names.dmp")} if (scalar(keys(%NCBInames)) == 0);
+				Utils::addNamesToLineage(\@guessedLineage, \%NCBInames);
+				addNCBILineage(\%NCBItax, \@guessedLineage, $taxon->{abundance})
+			} else {
+				print STDERR "warnings: could not find a NCBI taxid for '".$taxon->{name}."'. Abundance is added to class 'unassigned'.\n";
+				if (not exists $NCBItax{children}->{-1}) {
+					$NCBItax{children}->{-1} = {rank => 'unassigned', name => 'unassigned'};
+				}
+				$NCBItax{children}->{-1}->{children}->{--$idMismappings} = {abundance => $taxon->{abundance}, rank => 'noMappingFound', name => $taxon->{lineage}};
+				push @missingTaxa, $taxon;
 			}
-			$NCBItax{children}->{-1}->{children}->{--$idMismappings} = {abundance => $taxon->{abundance}, rank => 'noMappingFound', name => $taxon->{lineage}};
 		}
 	}
 }
+
+#~ Utils::screenNCBItaxonomyNames($dirWithNCBItaxDump, \@missingTaxa);
+#~ die;
 
 markStrains(\%NCBItax);
 pruneUnwantedRanks(\%NCBItax);
@@ -79,7 +104,7 @@ pruneUnwantedRanks(\%NCBItax);
 my @resultlines = ();
 printProfile(\%NCBItax, \@resultlines);
 print "# Taxonomic Profiling Output\n";
-print '@'."SampleID:???\n";
+print '@'."SampleID:".$sampleIDname."\n";
 print '@'."Version:0.9.3\n";
 print '@'."Ranks:".join("|", @RANKS)."\n";
 print '@'."TaxonomyID:ncbi-taxonomy_".$taxonomydate."\n";
