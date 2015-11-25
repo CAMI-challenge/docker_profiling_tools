@@ -30,8 +30,8 @@ ADD workdir/Assembly_result.xml workdir/bioproject_result.xml workdir/manual.txt
 #run the one time mapping from "species2genomes.txt" into NCBI taxids and store the result in $MAPPERRESULT
 #since the NCBI taxonomy is not static, it might happen that some taxids are no longer used, i.e. the following program crashes. Try to manually update the XML files via the NCBI batch entrez system.
 RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/buildIDlists.pl ${PREFIX}/src/metaphlan2/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 
-#should the previous command be successful, temporary files in workdir can be deleted
-#RUN rm -rf ${PREFIX}/share/{$MAPPERNAME}/workdir
+#should the previous command be successful, temporary files in workdir/Downloads can be deleted
+RUN rm -rf ${PREFIX}/share/{$MAPPERNAME}/workdir/Downloads
 
 ADD task.pl ${PREFIX}/bin/
 RUN chmod a+x ${PREFIX}/bin/task.pl
