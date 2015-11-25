@@ -5,7 +5,7 @@ MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
 ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
-
+ENV IO /exchange/
 
 #update underlying linux system
 RUN apt-get update -y
@@ -33,3 +33,14 @@ RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/buildIDlist
 #should the previous command be successful, temporary files in workdir can be deleted
 #RUN rm -rf ${PREFIX}/share/{$MAPPERNAME}/workdir
 
+ADD task.pl ${PREFIX}/bin/
+RUN chmod a+x ${PREFIX}/bin/task.pl
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+ENV CONT_FASTQ_FILE_LISTING ${IO}/input/inputfiles.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
+
+ENV PATH=${PREFIX}/bin:${PATH}
+
+ENTRYPOINT ["task.pl"]
