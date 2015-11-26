@@ -5,6 +5,7 @@ ENV TOOLNAME phylosift
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
 #ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget
+ENV PACKAGES wget
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 ENV IO /exchange/
@@ -13,14 +14,23 @@ ENV IO /exchange/
 RUN apt-get update -y
 
 #install dependencies
-#RUN apt-get install -y --no-install-recommends ${PACKAGES}
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
 #create prefix directory and src subdirectory
 RUN mkdir -p ${PREFIX}/src
-#adding fingerprint for bitbucket.org for seamless hg cloning from that site
-RUN echo "[hostfingerprints]" >> ~/.hgrc && echo "bitbucket.org = 46:de:34:e7:9b:18:cd:7f:ae:fd:8b:e3:bc:f4:1a:5e:38:d7:ac:24" >> ~/.hgrc
-#download the latest version of MetaPhlAn2
-#RUN hg clone https://bitbucket.org/biobakery/metaphlan2 ${PREFIX}/src/${TOOLNAME}
+#download the latest version of PhyloSift
+RUN wget -q -O ${PREFIX}/src/phylosift.tar.bz2 http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift/phylosift_latest.tar.bz2
+#extract downloaded archive
+RUN tar xjvf ${PREFIX}/src/phylosift.tar.bz2 -C ${PREFIX}/src/
+#determine directory name and rename this directory into ${TOOLNAME}
+RUN cn=`find ${PREFIX}/src/ -name "phylosift_*" -type d` && mv $cn ${PREFIX}/src/${TOOLNAME}
+#replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
+RUN mkdir -p ${HOME}/share/phylosift/ncbi/
+RUN wget -q -O ${HOME}/share/phylosift/ncbi/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+#note the download date of the NCBI taxonomy
+RUN date +"%Y.%m.%d" > ${HOME}/share/phylosift/ncbi/taxdump.tar.gz.date
+
+RUN sudo apt-get install curl
 
 #metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
 #ENV MAPPERNAME IDmapper
