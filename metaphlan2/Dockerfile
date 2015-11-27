@@ -1,6 +1,10 @@
 FROM ubuntu:14.04
 MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
 
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
 ENV TOOLNAME metaphlan2 
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
@@ -35,7 +39,7 @@ RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/buildIDlist
 #should the previous command be successful, temporary files in workdir/Downloads can be deleted
 RUN rm -rf ${PREFIX}/share/${MAPPERNAME}/workdir/Downloads
 
-ADD ${TOOLNAME}/task.pl ${PREFIX}/bin/
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl
 RUN mkdir -p ${IO}/input/
 RUN mkdir -p ${IO}/output/
@@ -43,6 +47,7 @@ RUN mkdir -p ${IO}/output/
 ENV CONT_FASTQ_FILE_LISTING ${IO}/input/inputfiles.txt
 ENV CONT_PROFILING_FILES ${IO}/output/
 
+ENV NCORES 4
 ENV PATH=${PREFIX}/bin:${PATH}
 
 ENTRYPOINT ["task.pl"]
