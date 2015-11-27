@@ -28,7 +28,8 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 						"--input_type fastq ".
 						"--nproc ".$ENV{NCORES}." ".
 						"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
-						"--sample_id_key '".$line."' ";
+						"--bowtie2out /tmp/".$id.".bowtie2 ";
+						"--sample_id_key '".$id."' ";
 					if ($listing eq $ENV_singleend) {
 						#call for single end read inputs
 						$resultfilename .= "singleend.txt";
@@ -40,7 +41,7 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 						$resultfilename .= "contig.txt";
 					}
 					my $commonTail = "--output_file ".$resultfilename." \"$line\" ";
-					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert_".$ENV{TOOLNAME}.".pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"$id\" > $resultfilename.profile";
+					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert_".$ENV{TOOLNAME}.".pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"$line\" > $resultfilename.profile";
 					$commonTail .= " && chmod a+rw $resultfilename.*";
 					push @tasks, $commonHead.$commonTail;
 				}
