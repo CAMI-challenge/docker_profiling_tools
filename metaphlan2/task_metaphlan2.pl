@@ -8,9 +8,6 @@ my $ENV_singleend = 'CONT_FASTQ_FILE_LISTING';
 my $ENV_pairedend = 'CONT_PAIRED_FASTQ_FILE_LISTING';
 my $ENV_contigs = 'CONT_CONTIGS_FILE_LISTING';
 
-my ($cores) = @ARGV;
-$cores = 1 if (not defined $cores);
-
 die "environment variable PREFIX is not set!\n" if (not defined $ENV{PREFIX});
 die "environment variable CONT_PROFILING_FILES is not set!\n" if (not defined $ENV{CONT_PROFILING_FILES});
 die "environment variable MAPPERNAME is not set!\n" if (not defined $ENV{MAPPERNAME});
@@ -29,7 +26,7 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 					my $commonHead = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/metaphlan2.py ".
 						"--mpa_pkl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200.pkl ".
 						"--input_type fastq ".
-						"--nproc $cores ".
+						"--nproc ".$ENV{NCORES}." ".
 						"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
 						"--sample_id_key '".$line."' ";
 					if ($listing eq $ENV_singleend) {
@@ -44,6 +41,7 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 					}
 					my $commonTail = "--output_file ".$resultfilename." \"$line\" ";
 					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert_".$ENV{TOOLNAME}.".pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"$id\" > $resultfilename.profile";
+					$commonTail .= " && chmod a+rw $resultfilename.*";
 					push @tasks, $commonHead.$commonTail;
 				}
 			}
