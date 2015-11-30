@@ -48,10 +48,11 @@ RUN mkdir -p ${PREFIX}/bin/
 RUN mkdir -p ${IO}/input/
 RUN mkdir -p ${IO}/output/
 RUN mkdir -p /tmp/${TOOLNAME}_run/
-ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
+#ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
+ADD inputlist_contigs.txt ${IO}/
 
 ENV PATH=${PREFIX}/bin:${PATH}
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
 ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
 ENV CONT_PROFILING_FILES ${IO}/output/
 

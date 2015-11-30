@@ -8,5 +8,5 @@
 #$ -cwd
 
 cd /home/sjanssen/docker_profiling_tools
-docker build -f phylosift/Dockerfile  -t phylosift .
+docker build -f phylosift/Dockerfile_phylosift  -t phylosift .
 docker run -v "/vol/projects/sjanssen/CAMI/:/exchange/input" -v "/home/sjanssen/dockerruns/phylosift_1:/exchange/output:rw" -t phylosift
