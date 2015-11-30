@@ -1,0 +1,105 @@
+FROM ubuntu:14.04
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME amphora2
+ENV NCORES 4
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES wget curl git ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+  
+#update underlying linux system
+RUN apt-get update -y
+
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/src
+RUN git clone https://github.com/martinwu/AMPHORA2.git ${PREFIX}/src/${TOOLNAME}
+
+##install dependencies:
+RUN mkdir -p ${PREFIX}/bin/
+ENV PATH=${PREFIX}/bin:${PATH}
+#hmmer3
+RUN wget -q -O ${PREFIX}/src/hmmer3.tgz http://selab.janelia.org/software/hmmer3/3.0/hmmer-3.0.tar.gz
+RUN tar xzvf ${PREFIX}/src/hmmer3.tgz -C ${PREFIX}/src/
+RUN rm ${PREFIX}/src/hmmer3.tgz
+RUN cn=`find ${PREFIX}/src/ -name "hmmer-*" -type d` && mv $cn ${PREFIX}/src/hmmer3
+RUN cd ${PREFIX}/src/hmmer3 && ./configure --prefix=${PREFIX} && make -j ${NCORES} && make install
+
+#raxml
+RUN git clone https://github.com/stamatak/standard-RAxML.git ${PREFIX}/src/raxml
+RUN cd ${PREFIX}/src/raxml && make -f Makefile.gcc -j ${NCORES} && rm *.o
+RUN cd ${PREFIX}/src/raxml && make -f Makefile.PTHREADS.gcc -j ${NCORES} && rm *.o
+RUN cp ${PREFIX}/src/raxml/raxmlHPC* ${PREFIX}/bin/
+
+#bioperl
+RUN apt-get install -y --no-install-recommends clustalo libgd-perl bioperl
+RUN apt-get install -y --no-install-recommends cpanminus
+RUN cpanm -v LWP::Simple
+
+#EMBOSS
+RUN apt-get install -y --no-install-recommends emboss
+
+##patch bioperl to operate with strange Newick trees
+ADD ${TOOLNAME}/bioperl_newick.patch ${PREFIX}/src/
+RUN apt-get install -y --no-install-recommends patch
+RUN patch /usr/share/perl5/Bio/TreeIO/NewickParser.pm < ${PREFIX}/src/bioperl_newick.patch
+
+ENV AMPHORA2_home ${PREFIX}/src/${TOOLNAME}
+
+#~ cd /tmp
+#~ perl /biobox/src/amphora2/Scripts/MarkerScanner.pl -Bacteria -DNA /biobox/src/amphora2/TestData/ecoli.fasta
+#~ perl /biobox/src/amphora2/Scripts/MarkerAlignTrim.pl -WithReference -OutputFormat phylip
+#~ perl /biobox/src/amphora2/Scripts/Phylotyping.pl -CPUs 6 > phylotype.result
+
+
+
+
+#~ #download the latest version of PhyloSift
+#~ RUN wget -q -O ${PREFIX}/src/phylosift.tar.bz2 http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift/phylosift_latest.tar.bz2
+#~ #extract downloaded archive
+#~ RUN tar xjvf ${PREFIX}/src/phylosift.tar.bz2 -C ${PREFIX}/src/
+#~ #determine directory name and rename this directory into ${TOOLNAME}
+#~ RUN cn=`find ${PREFIX}/src/ -name "phylosift_*" -type d` && mv $cn ${PREFIX}/src/${TOOLNAME}
+#~ RUN rm ${PREFIX}/src/phylosift.tar.bz2
+#~ #replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
+#~ RUN mkdir -p ${HOME}/share/phylosift/ncbi/
+#~ RUN wget -q -O ${HOME}/share/phylosift/ncbi/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+#~ RUN tar xzvf ${HOME}/share/phylosift/ncbi/taxdump.tar.gz -C ${HOME}/share/phylosift/ncbi/
+#~ RUN rm ${HOME}/share/phylosift/ncbi/taxdump.tar.gz
+#~ #note the download date of the NCBI taxonomy
+#~ RUN date +"%Y.%m.%d" > ${HOME}/share/phylosift/ncbi/taxdump.tar.gz.date
+
+#~ #normally phylosift downloads its marker database when it is executed the first time. I want to have the download ready when building the container, thus it is done here manually
+#~ RUN wget -q -O ${HOME}/share/phylosift/markers.tgz http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift_markers/markers.tgz
+#~ RUN tar xzvf ${HOME}/share/phylosift/markers.tgz -C ${HOME}/share/phylosift/
+#~ RUN rm ${HOME}/share/phylosift/markers.tgz
+
+
+#~ RUN mkdir -p ${IO}/input/
+#~ RUN mkdir -p ${IO}/output/
+#~ RUN mkdir -p /tmp/${TOOLNAME}_run/
+#~ ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
+
+#~ ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+#~ ENV CONT_PROFILING_FILES ${IO}/output/
+
+#~ #phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
+#~ ENV MAPPERNAME IDmapper
+#~ ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+#~ ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
+#~ ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+#~ RUN chmod a+x ${PREFIX}/bin/task.pl
+
+
+#~ ENTRYPOINT ["task.pl"]
