@@ -41,10 +41,9 @@ RUN rm -rf ${PREFIX}/share/${MAPPERNAME}/workdir/Downloads
 
 RUN mkdir -p ${IO}/input/
 RUN mkdir -p ${IO}/output/
-ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
+ADD inputlist_reads_interleaved.txt ${IO}/
 
 ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
 ENV CONT_PROFILING_FILES ${IO}/output/
 
 ENV NCORES 4
