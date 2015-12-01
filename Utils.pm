@@ -95,7 +95,7 @@ sub read_taxonomytree {
 	
 	my %taxonomy = ();
 	print STDERR "reading taxonomy ...";
-	open (IN, $filename_nodesdmp) || die;
+	open (IN, $filename_nodesdmp) || die "can't read NCBI taxonomy node filename '$filename_nodesdmp': $!";
 		while (my $line = <IN>) {
 			my ($taxid, $parent_taxid, $rank) = split(m/\n|\s*\|\s*/, $line);
 			$taxonomy{$taxid} = {rank => $rank, parent => $parent_taxid};
