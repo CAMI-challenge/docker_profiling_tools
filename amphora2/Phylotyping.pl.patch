@@ -1,0 +1,12 @@
+--- Phylotyping.pl	2015-12-01 14:21:24.139774193 +0100
++++ ../../AMPHORA2/DockerOut/Phylotyping.pl	2015-12-01 13:24:14.875712588 +0100
+@@ -225,7 +225,8 @@
+ 	my ($taxon,$confidence,$query) = @_;
+ 
+ 	if ($rank{$taxon->rank}) {
+-		$output .= "\t".$taxon->scientific_name."(".(sprintf "%.2f", $confidence->{$query}{$taxon->id}).")";
++		#$output .= "\t".$taxon->scientific_name."(".(sprintf "%.2f", $confidence->{$query}{$taxon->id}).")";
++		$output .= "\t".$taxon->id;
+ 	}
+ 	return if ($taxon->rank =~ /species/i);
+ 	my $best = undef;
