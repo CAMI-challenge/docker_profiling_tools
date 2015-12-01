@@ -28,6 +28,10 @@ RUN wget -q -O ${PREFIX}/src/phylosift.tar.bz2 http://edhar.genomecenter.ucdavis
 RUN tar xjvf ${PREFIX}/src/phylosift.tar.bz2 -C ${PREFIX}/src/
 #determine directory name and rename this directory into ${TOOLNAME}
 RUN cn=`find ${PREFIX}/src/ -name "phylosift_*" -type d` && mv $cn ${PREFIX}/src/${TOOLNAME}
+RUN echo '' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
+#increase the maximum allowed memory consumption for Infernal tools from 2.5 GB to 10 GB
+RUN echo '$cm_align_long_mxsize = "10000";' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
+RUN echo '$cm_align_short_mxsize = "10000";' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
 RUN rm ${PREFIX}/src/phylosift.tar.bz2
 
 #replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
