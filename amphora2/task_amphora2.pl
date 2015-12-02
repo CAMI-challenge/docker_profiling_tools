@@ -20,36 +20,28 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 				chomp $line;
 				if (-e $line) {
 					my $id = $line;
-					my $resultfilename = $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1)."_";
-					my $commonHead = "mkdir -p /tmp/run/ ";
-					$commonHead .= " && perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerScanner.pl -DNA $line";
-					$commonHead .= " && perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerScanner.pl -DNA $line";
-					
-					my $commonHead = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/phylosift all ".
-						"--disable_updates ".
-						"--simple ".
-						"-f ".
-						"--output /tmp/phylosift_run/ ".
-						"--threads ".$ENV{NCORES}." ".
-						#~ "--chunks 10 ".
-						#~ "--chunk_size 10 ".
-						"--keep_search ";
-					my $middle = "";
+					my $resultfilename = $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1);
+					my $commonHead = "rm -rf /tmp/run ";
+					$commonHead .= " && mkdir -p /tmp/run/ ";
+					$commonHead .= " && cd /tmp/run/ ";
+					$commonHead .= " && gunzip -c $line > /tmp/run/input.fasta ";
+					$commonHead .= " && perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerScanner.pl -DNA input.fasta";
+					$commonHead .= " && perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerAlignTrim.pl -WithReference -OutputFormat phylip";
+					$commonHead .= " && perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/Phylotyping.pl -CPUs ".$ENV{NCORES}." > ".$resultfilename.".orig";
+
 					if ($listing eq $ENV_singleend) {
 						#call for single end read inputs
-						$resultfilename .= "singleend";
+						#~ $resultfilename .= "singleend";
 					} elsif ($listing eq $ENV_pairedend) {
 						#call for paired end read inputs
-						$resultfilename .= "pairedend";
-						$middle .= "--paired ";
+						#~ $resultfilename .= "pairedend";
 					} elsif ($listing eq $ENV_contigs) {
 						#call for contig as inputs
-						$resultfilename .= "contig";
+						#~ $resultfilename .= "contig";
 					}
 					my $commonTail = "";
-					$commonTail .= " $line && cp /tmp/phylosift_run/taxasummary.txt ".$resultfilename.".orig";
-					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$resultfilename.".orig ".$ENV{HOME}."/share/phylosift/ncbi/ \"$id\" > $resultfilename.profile";
-					$commonTail .= " && chmod a+rw > $resultfilename.*";
+					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$resultfilename.".orig ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/Taxonomy/ \"$id\" > $resultfilename.profile";
+					$commonTail .= " && chmod a+rw $resultfilename.*";
 					push @tasks, $commonHead.$commonTail;
 				}
 			}
