@@ -7,6 +7,7 @@ ENV https_proxy http://172.16.20.249:3128
 
 ENV TOOLNAME amphora2
 ENV NCORES 4
+ENV MAPPERNAME IDmapper
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
 ENV PACKAGES wget curl git ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc
@@ -59,9 +60,13 @@ RUN wget -q -O ${PREFIX}/src/${TOOLNAME}/Taxonomy/taxdump.tar.gz ftp://ftp.ncbi.
 #note the download date of the NCBI taxonomy
 RUN date +"%Y.%m.%d" > ${PREFIX}/src/${TOOLNAME}/Taxonomy/taxdump.tar.gz.date
 RUN tar xzvf ${PREFIX}/src/${TOOLNAME}/Taxonomy/taxdump.tar.gz -C ${PREFIX}/src/${TOOLNAME}/Taxonomy/
-RUN rm ${HOME}/share/phylosift/ncbi/taxdump.tar.gz
+RUN rm ${PREFIX}/src/${TOOLNAME}/Taxonomy/taxdump.tar.gz
 ADD ${TOOLNAME}/contig.taxonid.patch ${PREFIX}/src/${TOOLNAME}/Taxonomy/
 RUN patch ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid < ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid.patch
+#check if all taxonIDs in contig.taxonid are still in the updated taxonomy
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/checkTaxids.pl ${PREFIX}/src/${MAPPERNAME}/checkTaxids.pl
+RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/checkTaxids.pl ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid ${PREFIX}/src/${TOOLNAME}/Taxonomy/
 #fix phylosift such that it reports NCBI taxonomy IDs instead of scientific names
 ADD ${TOOLNAME}/Phylotyping.pl.patch ${PREFIX}/src/${TOOLNAME}/Scripts/
 RUN patch ${PREFIX}/src/${TOOLNAME}/Scripts/Phylotyping.pl < ${PREFIX}/src/${TOOLNAME}/Scripts/Phylotyping.pl.patch
@@ -71,11 +76,14 @@ ENV AMPHORA2_home ${PREFIX}/src/${TOOLNAME}
 RUN mkdir -p ${IO}/input/
 RUN mkdir -p ${IO}/output/
 RUN mkdir -p /tmp/${TOOLNAME}_run/
-ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
+ADD inputlist_contigs.txt ${IO}/
 
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
 ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
 ENV CONT_PROFILING_FILES ${IO}/output/
+
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
 
 #~ cd /tmp
 #~ perl /biobox/src/amphora2/Scripts/MarkerScanner.pl -Bacteria -DNA /biobox/src/amphora2/TestData/ecoli.fasta
@@ -83,16 +91,4 @@ ENV CONT_PROFILING_FILES ${IO}/output/
 #~ perl /biobox/src/amphora2/Scripts/Phylotyping.pl -CPUs 6 > phylotype.result
 
 
-
-
-
-
-#~ #phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
-#~ ENV MAPPERNAME IDmapper
-#~ ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
-#~ ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
-#~ ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-#~ RUN chmod a+x ${PREFIX}/bin/task.pl
-
-
-#~ ENTRYPOINT ["task.pl"]
+ENTRYPOINT ["task.pl"]
