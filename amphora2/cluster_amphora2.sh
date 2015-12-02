@@ -6,6 +6,7 @@
 #$ -o /vol/projects/sjanssen/dockerruns/OUT/
 #$ -pe multislot 4
 #$ -cwd
+#$ -l hostname=bioinf002
 
 cd /home/sjanssen/docker_profiling_tools
 docker build -f amphora2/Dockerfile  -t amphora2 .
