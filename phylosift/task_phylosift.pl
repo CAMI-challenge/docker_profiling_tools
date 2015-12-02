@@ -45,7 +45,7 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 					my $commonTail = "";
 					$commonTail .= " $line && cp /tmp/phylosift_run/taxasummary.txt ".$resultfilename.".orig";
 					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$resultfilename.".orig ".$ENV{HOME}."/share/phylosift/ncbi/ \"$id\" > $resultfilename.profile";
-					$commonTail .= " && chmod a+rw > $resultfilename.*";
+					$commonTail .= " && chmod a+rw $resultfilename.*";
 					push @tasks, $commonHead.$commonTail;
 				}
 			}
