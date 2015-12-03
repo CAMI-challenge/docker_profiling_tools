@@ -147,6 +147,22 @@ sub read_taxonomyNames {
 	return \%names;
 }
 
+sub read_taxonomyMerged {
+	my ($filename_mergeddmp) = @_;
+	
+	my %merged = ();
+	print STDERR "reading taxonomy merged nodes ...";
+	open (IN, $filename_mergeddmp) || die "cannot read file '$filename_mergeddmp': $!";
+		while (my $line = <IN>) {
+			my ($old, $new) = split(m/\n|\s*\|\s*/, $line);
+			$merged{$old} = $new;
+		}
+	close (IN);
+	print STDERR " done.\n";
+
+	return \%merged;
+}
+
 
 sub addNCBILineage {
 	my ($tree, $lineage, $abundance) = @_;
