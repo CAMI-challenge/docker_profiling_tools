@@ -33,5 +33,5 @@ open (IN, $contigfile) || die "cannot read contig file '$contigfile': $!\n";
 close (IN);
 
 if ($missing ne "") {
-	die "The following taxon IDs do not exist in the present dump of the NCBI taxonomy.\nPlease correct these lines in '$contigfile' and re-start the docker build.\n";
+	die "The following taxon IDs do not exist in the present dump of the NCBI taxonomy.\nPlease correct these lines in '$contigfile' and re-start the docker build:\n$missing\n";
 }
