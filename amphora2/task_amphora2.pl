@@ -40,7 +40,7 @@ foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
 						#~ $resultfilename .= "contig";
 					}
 					my $commonTail = "";
-					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$resultfilename.".orig ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/Taxonomy/ \"$id\" > $resultfilename.profile";
+					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$resultfilename.".orig ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Taxonomy/ \"$id\" > $resultfilename.profile";
 					$commonTail .= " && chmod a+rw $resultfilename.*";
 					push @tasks, $commonHead.$commonTail;
 				}
