@@ -34,11 +34,6 @@ RUN wget -q -O ${PREFIX}/src/${TOOLNAME}/motu.tar.gz http://www.bork.embl.de/sof
 #extract downloaded archive
 RUN tar xzvf ${PREFIX}/src/${TOOLNAME}/motu.tar.gz -C ${PREFIX}/src/${TOOLNAME}/
 RUN rm -f ${PREFIX}/src/${TOOLNAME}/motu.tar.gz
-#extract the motu shipped files from the Perl data block
-RUN ln=`grep "__DATA__" ${PREFIX}/src/${TOOLNAME}/mOTUs.pl -n | cut -d ":" -f 1`; linenumber=`echo "$ln+1" | bc`; cat ${PREFIX}/src/${TOOLNAME}/mOTUs.pl | tail -n +$linenumber | base64 --decode > ${PREFIX}/src/${TOOLNAME}/files.tgz
-RUN mkdir -p ${PREFIX}/src/${TOOLNAME}/motus_data/
-RUN tar xzvf ${PREFIX}/src/${TOOLNAME}/files.tgz -C ${PREFIX}/src/${TOOLNAME}/motus_data/
-RUN rm -f ${PREFIX}/src/${TOOLNAME}/files.tgz
 
 #download the NCBI taxonomy from NCBI's FTP server
 RUN mkdir -p ${PREFIX}/share/taxonomy/
@@ -50,53 +45,18 @@ RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
 
 ENV MAPPERNAME IDmapper
 ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
 
-ADD ${TOOLNAME}/checkTaxids_${TOOLNAME}.pl ${PREFIX}/bin/checkTaxids.pl
-RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/bin/checkTaxids.pl ${PREFIX}/src/${TOOLNAME}/motus_data/data/RefMG.v1.padded.refmg.map ${PREFIX}/share/taxonomy/ > ${PREFIX}/src/${TOOLNAME}/motus_data/data/new
-RUN mv ${PREFIX}/src/${TOOLNAME}/motus_data/data/RefMG.v1.padded.refmg.map ${PREFIX}/src/${TOOLNAME}/motus_data/data/RefMG.v1.padded.refmg.map.backup
-RUN mv ${PREFIX}/src/${TOOLNAME}/motus_data/data/new ${PREFIX}/src/${TOOLNAME}/motus_data/data/RefMG.v1.padded.refmg.map
+ADD inputlist_reads_interleaved.txt ${IO}/
 
-#~ #download the latest version of PhyloSift
-#~ RUN wget -q -O ${PREFIX}/src/phylosift.tar.bz2 http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift/phylosift_latest.tar.bz2
-#~ #extract downloaded archive
-#~ RUN tar xjvf ${PREFIX}/src/phylosift.tar.bz2 -C ${PREFIX}/src/
-#~ #determine directory name and rename this directory into ${TOOLNAME}
-#~ RUN cn=`find ${PREFIX}/src/ -name "phylosift_*" -type d` && mv $cn ${PREFIX}/src/${TOOLNAME}
-#~ RUN echo '' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
-#~ #increase the maximum allowed memory consumption for Infernal tools from 2.5 GB to 10 GB
-#~ RUN echo '$cm_align_long_mxsize = "10000";' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
-#~ RUN echo '$cm_align_short_mxsize = "10000";' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
-#~ RUN rm ${PREFIX}/src/phylosift.tar.bz2
+ENV PATH=${PREFIX}/bin:${PATH}
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
 
-#~ #replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
-#~ RUN mkdir -p ${HOME}/share/phylosift/ncbi/
-#~ RUN wget -q -O ${HOME}/share/phylosift/ncbi/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
-#~ RUN tar xzvf ${HOME}/share/phylosift/ncbi/taxdump.tar.gz -C ${HOME}/share/phylosift/ncbi/
-#~ RUN rm ${HOME}/share/phylosift/ncbi/taxdump.tar.gz
-#~ #note the download date of the NCBI taxonomy
-#~ RUN date +"%Y.%m.%d" > ${HOME}/share/phylosift/ncbi/taxdump.tar.gz.date
-
-#~ #normally phylosift downloads its marker database when it is executed the first time. I want to have the download ready when building the container, thus it is done here manually
-#~ RUN wget -q -O ${HOME}/share/phylosift/markers.tgz http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift_markers/markers.tgz
-#~ RUN tar xzvf ${HOME}/share/phylosift/markers.tgz -C ${HOME}/share/phylosift/
-#~ RUN rm ${HOME}/share/phylosift/markers.tgz
+#phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
 
 
-#~ RUN mkdir -p /tmp/${TOOLNAME}_run/
-#~ #ADD inputlist_contigs.txt inputlist_reads_interleaved.txt ${IO}/
-#~ ADD inputlist_contigs.txt ${IO}/
-
-#~ ENV PATH=${PREFIX}/bin:${PATH}
-#~ #ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-#~ ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
-#~ ENV CONT_PROFILING_FILES ${IO}/output/
-
-#~ #phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
-#~ ENV MAPPERNAME IDmapper
-#~ ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
-#~ ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
-#~ ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-#~ RUN chmod a+x ${PREFIX}/bin/task.pl
-
-
-#~ ENTRYPOINT ["task.pl"]
+ENTRYPOINT ["task.pl"]
