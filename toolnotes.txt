@@ -1,5 +1,5 @@
-TOOLNAME	TYPE			INPUT
-MetaPhLan	marker based		a fastq file containing metagenomic reads, no contigs!
-Phylosift	protein marker based	raw reads (Illumina, 454) || contigs
-Amphora2
-mOTU					only raw reads
+TOOLNAME	TYPE					INPUT
+MetaPhLan	marker based			a fastq file containing metagenomic reads, no contigs!
+Phylosift	protein marker based	contigs
+Amphora2							contigs
+mOTU								only raw reads
