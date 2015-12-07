@@ -1,3 +1,4 @@
+/exchange/input/dummy_reads.fasta.gz
 /exchange/input/Low_toy/S_S001__genomes_30__insert_180_reads_anonymous.fq.gz
 /exchange/input/Low/RL_S001__insert_270.fq.gz
 /exchange/input/Medium_toy/M1_S001__insert_5000_reads_anonymous.fq.gz
