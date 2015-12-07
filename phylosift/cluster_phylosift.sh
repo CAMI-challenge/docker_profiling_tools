@@ -7,6 +7,7 @@
 #$ -pe multislot 4
 #$ -cwd
 #$ -l hostname=bioinf002
+#$ -l mem_free=40G 
 
 cd /home/sjanssen/docker_profiling_tools
 docker build -f phylosift/Dockerfile_phylosift  -t phylosift .
