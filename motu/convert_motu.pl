@@ -8,7 +8,7 @@ use Data::Dumper;
 use Utils;
 
 my ($filename_tooloutput, $dirWithNCBItaxDump, $sampleIDname) = @ARGV;
-die "usage: perl $0 <original tool result file> <NCBI dump> <mOTU map file> [sampleID]
+die "usage: perl $0 <original tool result file> <NCBI dump> [sampleID]
   tool result file: the original result of the original tool run.
   
   NCBI dump: must point to the directory that holds the unpacked dump 
