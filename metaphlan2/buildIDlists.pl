@@ -43,6 +43,11 @@ foreach my $file (@filesToDownload) {
 		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename names.dmp);
 		print STDERR " done.\n";
 	}
+	if (($filename eq 'taxdump.tar.gz') && (not -e $WORKDIR."/merged.dmp")) {
+		print STDERR "extracting 'merged.dmp' from '".$filename."': ...";
+		qx(cd $WORKDIR && tar xzvf $downloadSubDir/$filename merged.dmp);
+		print STDERR " done.\n";
+	}
 }
 
 ##Phase 1 grep all accession number from the species2genomes file of metaphlan and try to obtain according taxids from various sources, i.e. ftp downloads from NCBI for current accessions, produce id lists for Batch Entrez manual download for outdated accessions plus successive parsing of the retrieved XML files, look up in a manual.txt file for the few remaining accessions which must be found somewhere in the internet
@@ -50,6 +55,7 @@ my %ids = %{findspeciesaccessions($filename_species2genomes, $WORKDIR, $download
 
 ## Phase 2: given the taxIDs we now need to get the "lineage" from the NCBI taxonomy
 my %taxonomy = %{Utils::read_taxonomytree($WORKDIR.'/nodes.dmp')};
+my %NCBImerged = %{Utils::read_taxonomyMerged($WORKDIR."/merged.dmp")};
 my %genomes = ();
 foreach my $type (sort keys(%ids)) {
 	foreach my $id (keys(%{$ids{$type}})) {
@@ -57,6 +63,16 @@ foreach my $type (sort keys(%ids)) {
 			die "there are undefined IDs of type '$type' after phase 1. You should consider deleting the xml files and download fresh ones via NCBI batch entrez!\n";
 		}
 		my $taxid = $ids{$type}->{$id};
+		if (not exists $taxonomy{$taxid}) {
+			if (not exists $NCBImerged{$taxid}) {
+				die "no match for '$taxid'";
+			} else {
+				$taxid = $NCBImerged{$taxid};
+				if (not exists $taxonomy{$taxid}) {
+					die "no match for '$taxid'";
+				}
+			}
+		}
 		my $lineage = Utils::getLineage($taxid, \%taxonomy);
 		$genomes{$id} = $lineage;
 	}
