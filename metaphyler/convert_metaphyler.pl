@@ -63,4 +63,4 @@ foreach my $taxid (sort keys(%frequencies)) {
 }
 Utils::pruneUnwantedRanks(\%tree);
 
-print Utils::generateOutput("motu", $sampleIDname, \%tree, $taxonomydate);
+print Utils::generateOutput("metaphyler", $sampleIDname, \%tree, $taxonomydate);

@@ -60,16 +60,19 @@ ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
 #install a tool to convert from fastq to fasta
 RUN apt-get install -y --no-install-recommends seqtk
 
-#~ ADD inputlist_reads_interleaved.txt ${IO}/
+#patch metaphyler to use NCBI blast
+ADD ${TOOLNAME}/runMetaphyler.pl.patch ${PREFIX}/src/${TOOLNAME}/
+RUN apt-get install -y --no-install-recommends patch
+RUN patch ${PREFIX}/src/${TOOLNAME}/runMetaphyler.pl < ${PREFIX}/src/${TOOLNAME}/runMetaphyler.pl.patch
 
-#~ ENV PATH=${PREFIX}/bin:${PATH}
-#~ ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
-#~ ENV CONT_PROFILING_FILES ${IO}/output/
+ADD inputlist_reads_interleaved.txt ${IO}/
+ADD inputlist_contigs.txt ${IO}/
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
 
-#~ #phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
-#~ ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-#~ RUN chmod a+x ${PREFIX}/bin/task.pl
+ENV PATH=${PREFIX}/bin:${PATH}
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
 
-
-#~ ENTRYPOINT ["task.pl"]
+ENTRYPOINT ["task.pl"]
