@@ -1,0 +1,75 @@
+FROM ubuntu:14.04
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME metaphyler
+ENV NCORES 4
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES wget curl bc
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+
+#update underlying linux system
+RUN apt-get update -y
+
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/src/${TOOLNAME}/
+RUN mkdir -p ${PREFIX}/bin/
+RUN mkdir -p ${PREFIX}/share/
+
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+#download the latest version of MetaPhyler
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}/${TOOLNAME}.tar.gz http://metaphyler.cbcb.umd.edu/MetaPhylerV1.25.tar.gz
+#extract downloaded archive
+RUN tar xzvf ${PREFIX}/src/${TOOLNAME}/${TOOLNAME}.tar.gz -C ${PREFIX}/src/
+RUN rm -rf ${PREFIX}/src/${TOOLNAME}
+RUN mv ${PREFIX}/src/MetaPhylerV1.25/ ${PREFIX}/src/${TOOLNAME}/
+
+#install blast2
+RUN apt-get install -y --no-install-recommends ncbi-blast+
+
+#install GCC
+RUN apt-get install -y --no-install-recommends ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc
+
+#install G++
+RUN apt-get install -y --no-install-recommends g++
+
+#download the NCBI taxonomy from NCBI's FTP server
+RUN mkdir -p ${PREFIX}/share/taxonomy/
+RUN wget -q -O ${PREFIX}/share/taxonomy/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+RUN tar xzvf ${PREFIX}/share/taxonomy/taxdump.tar.gz -C ${PREFIX}/share/taxonomy/
+RUN rm -f ${PREFIX}/share/taxonomy/taxdump.tar.gz
+#note the download date of the NCBI taxonomy
+RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
+
+ENV MAPPERNAME IDmapper
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
+
+#install a tool to convert from fastq to fasta
+RUN apt-get install -y --no-install-recommends seqtk
+
+#~ ADD inputlist_reads_interleaved.txt ${IO}/
+
+#~ ENV PATH=${PREFIX}/bin:${PATH}
+#~ ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+#~ ENV CONT_PROFILING_FILES ${IO}/output/
+
+#~ #phylosift is using the NCBI taxonomy, but the output format is not strictly that of the CAMI challenge, thus the original output must be converted
+#~ ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+#~ RUN chmod a+x ${PREFIX}/bin/task.pl
+
+
+#~ ENTRYPOINT ["task.pl"]
