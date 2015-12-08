@@ -1,0 +1,18 @@
+--- MetaPhylerV1.25/runMetaphyler.pl	2012-05-23 17:12:14.000000000 +0200
++++ MetaPhylerV1.25_newblast/runMetaphyler.pl	2015-12-08 08:37:53.019694041 +0100
+@@ -31,13 +31,13 @@
+ 
+ 
+ my $ref = "$Bin/markers/markers.dna";
+-my $param = "-W15";
++my $param = "-word_size=15";
+ if ($blast eq "blastx") {
+     $param = "";
+     $ref = "$Bin/markers/markers.protein";
+ }
+ # run blast
+-my $cmd = "blastall -p $blast $param -a$nump -e0.01 -m8 -b1 -i $query -d $ref > $prefix.$blast";
++my $cmd = "$blast $param -num_threads=$nump -evalue=0.01 -outfmt=6 -num_alignments=1 -query $query -db=$ref > $prefix.$blast";
+ print "$cmd\n";
+ system("$cmd");
+ 
