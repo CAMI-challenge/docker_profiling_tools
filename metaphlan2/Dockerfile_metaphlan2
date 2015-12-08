@@ -8,7 +8,7 @@ ENV https_proxy http://172.16.20.249:3128
 ENV TOOLNAME metaphlan2 
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget
+ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget unzip
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 ENV IO /exchange/
@@ -24,7 +24,11 @@ RUN mkdir -p ${PREFIX}/src
 #adding fingerprint for bitbucket.org for seamless hg cloning from that site
 RUN echo "[hostfingerprints]" >> ~/.hgrc && echo "bitbucket.org = 46:de:34:e7:9b:18:cd:7f:ae:fd:8b:e3:bc:f4:1a:5e:38:d7:ac:24" >> ~/.hgrc
 #download the latest version of MetaPhlAn2
-RUN hg clone https://bitbucket.org/biobakery/metaphlan2 ${PREFIX}/src/${TOOLNAME}
+#RUN hg clone https://bitbucket.org/biobakery/metaphlan2 ${PREFIX}/src/${TOOLNAME}
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://bitbucket.org/biobakery/metaphlan2/get/3d22a72b109b.zip
+RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
+RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
+RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
 
 #metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
 ENV MAPPERNAME IDmapper
