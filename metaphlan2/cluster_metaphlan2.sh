@@ -6,7 +6,7 @@
 #$ -o /vol/projects/sjanssen/dockerruns/OUT/
 #$ -pe multislot 4
 #$ -cwd
-#$ -l hostname=bioinf003
+#$ -l hostname=bioinf005
 
 cd /vol/projects/sjanssen/docker_profiling_tools
 docker build -f metaphlan2/Dockerfile  -t metaphlan2 .
