@@ -1,13 +1,18 @@
 #!/bin/bash
 
-#$ -S /bin/bash
+memusage=40; #in gigabyte
+#$ -S /usr/bin/bash
 #$ -N metaphyler
 #$ -e /vol/projects/sjanssen/dockerruns/ERR/
 #$ -o /vol/projects/sjanssen/dockerruns/OUT/
 #$ -pe multislot 4
+#$ -l virtual_free=10g
+#$ -l mem_free=10g
 #$ -cwd
-#$ -l hostname=bioinf005
 
 cd /vol/projects/sjanssen/docker_profiling_tools
-docker build -f metaphyler/Dockerfile  -t metaphyler .
-docker run -v "/vol/projects/sjanssen/CAMI/:/exchange/input" -v "/vol/projects/sjanssen/dockerruns/metaphyler:/exchange/output:rw" -t metaphyler
+docker build -f metaphyler/Dockerfile_metaphyler  -t metaphyler .
+docker run --rm=true --memory=${memusage}g --memory-swap=-1 \
+-v "/vol/projects/sjanssen/CAMI/:/exchange/input" \
+-v "/vol/projects/sjanssen/dockerruns/metaphyler:/exchange/output:rw" \
+-t metaphyler
