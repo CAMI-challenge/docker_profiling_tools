@@ -1,0 +1,29 @@
+--- help/focus2result.py	2015-12-10 15:04:41.060769751 +0100
++++ focus2result.py	2015-12-10 15:06:59.852361526 +0100
+@@ -28,7 +28,7 @@
+         count[p[0].strip()]=float(p[1])
+ 
+ # read our pickled data 
+-data = load_pickle("/home/taxonomy.p")
++data = load_pickle("/biobox/src/focus/taxonomy.p")
+ 
+ # now we need to go through all levels and sum the results
+ 
+@@ -38,13 +38,14 @@
+ 
+ # print the header information
+ #
++# Taxonomic Profiling Output
+ 
+ print("#CAMI Submission for Taxonomic Profiling")
+-print("@Version:0.9.2")
+-#print("@_DATABASE_:" + version)
+ print("@SampleID:"+ sampleid)
++print("@Version:0.9.2")
+ print("@Ranks:superkingdom|phylum|class|order|family|genus|species|strain")
+-
++print("@TaxonomyID:ncbi-taxonomy_2015.07.17")
++print("@__program__:focus")
+ print("@@TAXID\tRANK\tTAXPATH\tTAXPATHSN\tPERCENTAGE")
+ 
+ valid_taxonomy = {'superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain'}
