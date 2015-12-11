@@ -11,6 +11,7 @@ ncores=4; #how many CPU cores can be addressed by the container
 #$ -l virtual_free=10g
 #$ -cwd
 
+uname -a
 cd /vol/projects/sjanssen/docker_profiling_tools
 docker build -f metaphlan2/Dockerfile_metaphlan2  -t metaphlan2 .
 docker run --rm=true --memory=${memusage}g --memory-swap=-1 --cpuset-cpus=${ncores} \

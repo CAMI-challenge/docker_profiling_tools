@@ -11,6 +11,7 @@ ncores=4; #how many CPU cores can be addressed by the container
 #$ -l mem_free=40g
 #$ -cwd
 
+uname -a
 cd /vol/projects/sjanssen/docker_profiling_tools
 docker build -f focus/Dockerfile_focus  -t focus .
 docker run --rm=true --memory=${memusage}g --memory-swap=-1 --cpuset-cpus=${ncores} \
