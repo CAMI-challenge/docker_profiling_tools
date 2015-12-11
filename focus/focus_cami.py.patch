@@ -1,13 +1,13 @@
---- focus_cami.py	2015-12-10 16:05:23.293132425 +0100
-+++ focus_cami.py_ch	2015-12-10 16:05:10.857526960 +0100
+--- focus_cami.py	2015-12-10 16:16:57.727059629 +0100
++++ focus_cami.py.new	2015-12-10 16:18:03.228977531 +0100
 @@ -72,8 +72,8 @@
      print "Jellyfish not installed. Please download it at http://www.cbcb.umd.edu/software/jellyfish"    
      
  #check if the query exists or if it is adding genome to the db
 -elif os.path.isfile(parameters["-q"])!=True:
 -    print "Please use -q and select a valid query!"
-+#elif os.path.isfile(parameters["-q"])!=True:
-+#    print "Please use -q and select a valid query!"
++#~ elif os.path.isfile(parameters["-q"])!=True:
++    #~ print "Please use -q and select a valid query!"
  
  #check if jellyfish is installed
  elif which("jellyfish")==None:
