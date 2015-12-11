@@ -5,7 +5,7 @@
  
  # read our pickled data 
 -data = load_pickle("/home/taxonomy.p")
-+data = load_pickle("/biobox/src/focus/taxonomy.p")
++data = load_pickle(os.environ['PREFIX']+"/src/focus/taxonomy.p")
  
  # now we need to go through all levels and sum the results
  
