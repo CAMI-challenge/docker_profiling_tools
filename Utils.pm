@@ -5,6 +5,10 @@ use warnings;
 
 package Utils;
 
+our $TYPE_READ_SINGLE = 'single end reads';
+our $TYPE_READ_PAIRED = 'paired end reads';
+our $TYPE_CONTIGS = 'contigs';
+
 use Data::Dumper;
 our @RANKS = ('superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain');
 
@@ -292,4 +296,60 @@ sub generateOutput {
 
 	return $output;
 }
+
+sub collectTasks {
+	my $ENV_singleend = 'CONT_FASTQ_FILE_LISTING';
+	my $ENV_pairedend = 'CONT_PAIRED_FASTQ_FILE_LISTING';
+	my $ENV_contigs = 'CONT_CONTIGS_FILE_LISTING';
+
+	die "environment variable PREFIX is not set!\n" if (not defined $ENV{PREFIX});
+	die "environment variable CONT_PROFILING_FILES, which should point to the location of an output directory is not set!\n" if (not defined $ENV{CONT_PROFILING_FILES});
+	die "environment variable MAPPERNAME is not set!\n" if (not defined $ENV{MAPPERNAME});
+
+	my @tasks = ();
+	foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
+		if ((defined $ENV{$listing}) && (-e $ENV{$listing})) {
+			open (IN, $ENV{$listing}) || die "file '".$ENV{$listing}."' not found: $!";
+				while (my $line = <IN>) {
+					chomp $line;
+					#~ if (-e $line) {
+						my $type = "unknown";
+						if ($listing eq $ENV_singleend) {
+							#call for single end read inputs
+							$type = $TYPE_READ_SINGLE;
+						} elsif ($listing eq $ENV_pairedend) {
+							#call for paired end read inputs
+							$type = $TYPE_READ_PAIRED;
+						} elsif ($listing eq $ENV_contigs) {
+							#call for contig as inputs
+							$type = $TYPE_CONTIGS;
+						}
+						push @tasks, {inputfile => $line, type => $type, resultfilename => $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1)};
+					#~ }
+				}
+			close (IN);
+		}
+	}
+	
+	return \@tasks;
+}
+
+sub executeTasks {
+	my ($refList_tasks) = @_;
+	
+	print scalar(@{$refList_tasks})." TASKS TO BE COMPUTED:\n";
+	for (my $i = 0; $i < @{$refList_tasks}; $i++) {
+		my %task = %{$refList_tasks->[$i]};
+		print "".('#' x 80)."\n";
+		print "EXECUTING TASK NO. ".($i+1)." of ".scalar(@{$refList_tasks}).":\n\t";
+		print join(";\n\t", @{$task{commands}})."\n";
+		my $cmdString = join(" ; ", @{$task{commands}});
+		my $starttime = time();
+		#~ print qx(bash -c '$cmdString');
+		my $endtime = time();
+		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
+		print "".('#' x 80)."\n\n";
+	}
+}
+
 1;
