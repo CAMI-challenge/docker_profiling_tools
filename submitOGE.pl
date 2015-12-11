@@ -50,6 +50,7 @@ sub createScript {
 	$SCRIPT .= '#$ -N '.$toolname.''."\n";
 	$SCRIPT .= '#$ -e '.$resultdir.'/ERR/'."\n";
 	$SCRIPT .= '#$ -o '.$resultdir.'/OUT/'."\n";
+	mkdir $resultdir."/".$toolname if ((not -d $resultdir."/".$toolname) && (not defined $justprint));
 	$SCRIPT .= '#$ -pe multislot '.$ncores."\n";
 	$SCRIPT .= '#$ -l virtual_free='.$programs{$toolname}->{ram}.'g'."\n";
 	$SCRIPT .= '#$ -l mem_free='.$programs{$toolname}->{ram}.'g'."\n";
