@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 
 use lib "../";
+use lib "/biobox/src/IDmapper/";
+
 use strict;
 use warnings;
 use Data::Dumper;
