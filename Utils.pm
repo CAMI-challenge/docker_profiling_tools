@@ -346,7 +346,7 @@ sub executeTasks {
 		print join(";\n\t", @{$task{commands}})."\n";
 		my $cmdString = join(" ; ", @{$task{commands}});
 		my $starttime = time();
-		#~ print qx(bash -c '$cmdString');
+		print qx(bash -c '$cmdString');
 		my $endtime = time();
 		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
 		print "".('#' x 80)."\n\n";
