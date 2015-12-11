@@ -1,59 +1,37 @@
 #!/usr/bin/env perl
 
+use lib "../";
 use strict;
 use warnings;
 use Data::Dumper;
+use Utils;
 
-my $ENV_singleend = 'CONT_FASTQ_FILE_LISTING';
-my $ENV_pairedend = 'CONT_PAIRED_FASTQ_FILE_LISTING';
-my $ENV_contigs = 'CONT_CONTIGS_FILE_LISTING';
-
-die "environment variable PREFIX is not set!\n" if (not defined $ENV{PREFIX});
-die "environment variable CONT_PROFILING_FILES is not set!\n" if (not defined $ENV{CONT_PROFILING_FILES});
-die "environment variable MAPPERNAME is not set!\n" if (not defined $ENV{MAPPERNAME});
-
-my @tasks = ();
-foreach my $listing ($ENV_singleend, $ENV_pairedend, $ENV_contigs) {
-	if ((defined $ENV{$listing}) && (-e $ENV{$listing})) {
-		open (IN, $ENV{$listing}) || die "file '".$ENV{$listing}."' not found: $!";
-			while (my $line = <IN>) {
-				chomp $line;
-				if (-e $line) {
-					my $id = $line;
-					$id =~ s/ /_/g;
-					$id =~ s|/|_|g;
-					my $resultfilename = $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1)."_";
-					my $commonHead = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/metaphlan2.py ".
-						"--mpa_pkl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200.pkl ".
-						"--input_type fastq ".
-						"--nproc ".$ENV{NCORES}." ".
-						"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
-						"--bowtie2out /tmp/".$id.".bowtie2 ";
-						"--sample_id_key '".$id."' ";
-					if ($listing eq $ENV_singleend) {
-						#call for single end read inputs
-						$resultfilename .= "singleend.txt";
-					} elsif ($listing eq $ENV_pairedend) {
-						#call for paired end read inputs
-						$resultfilename .= "pairedend.txt";
-					} elsif ($listing eq $ENV_contigs) {
-						#call for contig as inputs
-						$resultfilename .= "contig.txt";
-					}
-					my $commonTail = "--output_file ".$resultfilename." \"$line\" ";
-					$commonTail .= " && perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert_".$ENV{TOOLNAME}.".pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt $resultfilename ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"$line\" > $resultfilename.profile";
-					$commonTail .= " && chmod a+rw $resultfilename.*";
-					push @tasks, $commonHead.$commonTail;
-				}
-			}
-		close (IN);
-	}
-}
-
-my $counter = 1;
-print scalar(@tasks)." TASKS TO BE COMPUTED:\n";
+my @tasks = @{Utils::collectTasks()};
 foreach my $task (@tasks) {
-	print "RUNNING TASK ".($counter++)."/".scalar(@tasks).":\n\t'$task': ...";
-	print qx($task);
-	print "done.\n";
+	$task->{commands} = [];
+	
+	my $id = $task->{inputfile};
+	$id =~ s/ /_/g;
+	$id =~ s|/|_|g;
+	
+	if ($task->{type} eq $Utils::TYPE_READ_SINGLE) {
+		#call for single end read inputs
+	} elsif ($task->{type} eq $Utils::TYPE_READ_PAIRED) {
+		#call for paired end read inputs
+	} elsif ($task->{type} eq $Utils::TYPE_CONTIGS) {
+		#call for contig as inputs
+	}
+	
+	push @{$task->{commands}}, 
+		$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/metaphlan2.py ".
+		"--mpa_pkl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200.pkl ".
+		"--input_type fastq ".
+		"--nproc ".$ENV{NCORES}." ".
+		"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
+		"--bowtie2out /tmp/".$id.".bowtie2 ".
+		"--sample_id_key '".$id."' ".
+		"--output_file ".$task->{resultfilename}.".orig \"".$task->{inputfile}."\"";
+	push @{$task->{commands}}, "perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert_".$ENV{TOOLNAME}.".pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt ".$task->{resultfilename}.".orig ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/workdir/ \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile";	
 }
+
+Utils::executeTasks(\@tasks);
