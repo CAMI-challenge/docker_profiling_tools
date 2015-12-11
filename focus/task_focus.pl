@@ -52,6 +52,6 @@ my $counter = 1;
 print scalar(@tasks)." TASKS TO BE COMPUTED:\n";
 foreach my $task (@tasks) {
 	print "RUNNING TASK ".($counter++)."/".scalar(@tasks).":\n\t'$task': ...";
-	print qx($task);
+	print qx(bash -c '$task');
 	print "done.\n";
 }
