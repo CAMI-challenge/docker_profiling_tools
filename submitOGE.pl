@@ -20,7 +20,10 @@ if (defined $script) {
 	if (defined $justprint) {
 		print $script;
 	} else {
-		my $scriptfilename = qx(tempfile); chomp $scriptfilename;
+		my $scriptfilename = "tmp_clusterscript.sh";
+		open (OUT, "> $scriptfilename") || die "cannot write: $!";
+			print OUT $script;
+		close (OUT);
 		print qx(qsub $scriptfilename);
 		unlink $scriptfilename;
 	}
