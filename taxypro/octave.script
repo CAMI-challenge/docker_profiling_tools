@@ -1,0 +1,8 @@
+#! /usr/bin/octave -qf
+printf ("%s", program_name ());
+arg_list = argv ();
+
+printf("%s\t%s\t%s\n",arg_list{1},arg_list{2},arg_list{3});
+addpath("/home/Tool/Taxy-Pro/");
+
+TaxyProMain(arg_list{1},arg_list{2},arg_list{3});

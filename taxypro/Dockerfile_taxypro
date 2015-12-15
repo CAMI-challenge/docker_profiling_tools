@@ -1,0 +1,54 @@
+FROM gobics/taxypro
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME taxypro
+ENV NCORES 4
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES dpatch
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+
+#update underlying linux system
+#~ RUN apt-get update -y
+
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/bin/
+RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
+ADD ${TOOLNAME}/octave.script ${PREFIX}/src/${TOOLNAME}/
+RUN chmod a+x ${PREFIX}/src/${TOOLNAME}/octave.script
+
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+#~ RUN mv /home/* ${PREFIX}/src/${TOOLNAME}/
+
+ENV MAPPERNAME IDmapper
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+
+ADD ${TOOLNAME}/TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
+RUN patch /home/Tool/Taxy-Pro/TaxyProMain.m < ${PREFIX}/src/${TOOLNAME}/TaxyProMain.m.patch
+#~ ADD ${TOOLNAME}/Classify.jl.patch /usr/local/sbin/Classify.jl
+#~ RUN patch /usr/local/sbin/Classify.jl < ${TOOLNAME}/Classify.jl.patch
+
+ADD inputlist_reads_interleaved.txt ${IO}/
+
+ENV PATH=${PREFIX}/bin:${PATH}
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
+
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
+
+
+ENTRYPOINT ["task.pl"]

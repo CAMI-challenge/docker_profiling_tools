@@ -1,0 +1,30 @@
+--- /vol/projects/sjanssen/dockerruns/taxypro/TaxyProMain.m	2015-12-15 10:59:28.268305864 +0100
++++ TaxyProMain.m	2015-12-15 11:29:12.215958518 +0100
+@@ -1,4 +1,4 @@
+-function TaxyProMain( fname, foname )
++function TaxyProMain( fname, foname, sampleID )
+ % has to be adapted if Taxy data files are not in default toolbox path
+ 
+ if ~exist(fname)
+@@ -77,6 +77,21 @@
+ 
+ ID = fopen(foname,'w');
+ 
++fprintf(ID, '# Taxonomic Profiling Output\n');
++fprintf(ID, '@SampleID:%s\n', sampleID);
++fprintf(ID, '@Version:0.9.3\n');
++fprintf(ID, '@Ranks:');
++for iter = 1:length(ListToProcess)
++	fprintf(ID, '%s', ListToProcess{iter});
++	if (iter != length(ListToProcess))
++		fprintf(ID, '|');
++	end
++end
++fprintf(ID, '\n');
++fprintf(ID, '@TaxonomyID:unknown\n');
++fprintf(ID, '@__program__:taxypro\n');
++fprintf(ID, '@@TAXID	RANK	TAXPATH	TAXPATHSN	PERCENTAGE\n');
++
+ for iter = 1:length(ListToProcess)
+     [~, UI] = unique(ValCell2(:,iter),'first');
+     
