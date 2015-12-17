@@ -1,0 +1,37 @@
+--- Classify.jl.davidsOriginal	2015-12-17 09:54:39.523476563 +0100
++++ Classify.jl	2015-12-17 09:53:24.861811773 +0100
+@@ -275,10 +275,11 @@
+ 
+ #Write the header
+ write(output_file_handle,"# CAMI Submission for Taxonomic Profiling\n")
+-write(output_file_handle,"@Version:0.9.1\n")
+ write(output_file_handle,"@SampleID:$(sample_ID)\n")
++write(output_file_handle,"@Version:0.9.1\n")
+ write(output_file_handle,"@Ranks: superkingdom|phylum|class|order|family|genus|species|strain\n")
+-write(output_file_handle,"\n")
++write(output_file_handle,"@TaxonomyID:GreenGenes_2015.07.07?\n")
++write(output_file_handle,"@__program__:commonkmers\n")
+ write(output_file_handle,"@@TAXID\tRANK\tTAXPATH\tTAXPATHSN\tPERCENTAGE\n")
+ 
+ taxa_names = [key for key in keys(output_taxonomy)];
+@@ -366,6 +367,8 @@
+ 			help = "output file"
+ 		"--input_file_name", "-i"
+ 			help = "input file name"
++		"--sampleid", "-s"
++			help = "An arbitrary name for the sample, which shows up in the profile output."
+ 		"--kind", "-k"
+ 			help = "Type of output file. Options are: sensitive, specific, and default."
+ 			default = "default"
+@@ -396,10 +399,10 @@
+ @everywhere data_dir = parsed_args["data_dir"]
+ @everywhere output_file = parsed_args["output_file"]
+ @everywhere input_file_name = parsed_args["input_file_name"]
++@everywhere sample_ID = parsed_args["sampleid"]
+ @everywhere kind = parsed_args["kind"]
+ @everywhere jellyfish_binary = parsed_args["jellyfish_binary"]
+ @everywhere query_per_sequence_binary = parsed_args["query_per_sequence_binary"]
+-@everywhere sample_ID = input_file_name
+ @everywhere quality = parsed_args["quality"]
+ @everywhere save_y = parsed_args["save_y"]
+ @everywhere re_run = parsed_args["re_run"]

@@ -1,0 +1,54 @@
+FROM dkoslicki/commonkmers
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME commonkmers
+ENV NCORES 4
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES ""
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+
+#update underlying linux system
+#~ RUN apt-get update -y
+
+#install dependencies
+#~ RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/bin/
+RUN mkdir -p ${PREFIX}/src/
+#~ RUN mkdir -p ${PREFIX}/share/
+
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+#~ RUN mv /home/* ${PREFIX}/src/${TOOLNAME}/
+
+ENV MAPPERNAME IDmapper
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+
+#~ ADD ${TOOLNAME}/focus2result.py.patch ${PREFIX}/src/${TOOLNAME}/
+#~ RUN patch ${PREFIX}/src/${TOOLNAME}/focus2result.py < ${PREFIX}/src/${TOOLNAME}/focus2result.py.patch
+ADD ${TOOLNAME}/Classify.jl.patch ${PREFIX}/src/${TOOLNAME}/Classify.jl.patch
+RUN patch /usr/local/sbin/Classify.jl < ${PREFIX}/src/${TOOLNAME}/Classify.jl.patch
+
+ADD inputlist_reads_interleaved.txt ${IO}/
+
+ENV PATH=${PREFIX}/bin:${PATH}
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
+
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
+
+RUN echo -e "\n \n NOTE: Be sure to download the training data at http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz and uncompress it. The resulting directory should be passed to docker at the proper location via: -v /path/to/uncompressed/Data:/exchange/db/:ro"
+
+ENTRYPOINT ["task.pl"]
