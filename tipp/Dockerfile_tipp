@@ -1,0 +1,84 @@
+FROM ubuntu:14.04
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME tipp
+ENV NCORES 4
+
+#update underlying linux system
+RUN apt-get update -y
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES wget curl bc unzip python default-jre ncbi-blast+
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/src/
+RUN mkdir -p ${PREFIX}/bin/
+RUN mkdir -p ${PREFIX}/share/
+
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+#downloading marker
+RUN wget -q -O ${PREFIX}/share/tipp.zip www.cs.utexas.edu/~phylo/software/sepp/tipp.zip
+RUN unzip -d ${PREFIX}/share/ ${PREFIX}/share/tipp.zip
+RUN rm -f ${PREFIX}/share/tipp.zip
+RUN tar xzvf ${PREFIX}/share/${TOOLNAME}/refpkg.tar.gz -C ${PREFIX}/share/${TOOLNAME}/
+ENV REFERENCE ${PREFIX}/share/tipp/
+ENV BLAST /usr/bin/blastn
+
+#install SEPP
+RUN apt-get install -y --no-install-recommends git
+RUN git config --global url."https://".insteadOf git://
+RUN git clone https://github.com/smirarab/sepp ${PREFIX}/src/sepp
+RUN cd ${PREFIX}/src/sepp && python setup.py install && python setup.py config
+ENV PATH=${HOME}/.sepp/bundled-v3.0/:${PATH}
+
+#download TIPP
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip http://www.cs.utexas.edu/~phylo/software/sepp/tipp-submission/master.zip
+#extract downloaded archive
+RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
+RUN mv ${PREFIX}/src/sepp-master* ${PREFIX}/src/${TOOLNAME}
+RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
+RUN sed -i "s/version = \"2.2.1\"/version = \"3.0\"/" ${PREFIX}/src/${TOOLNAME}/setup.py
+RUN cd ${PREFIX}/src/${TOOLNAME} && python setup.py tipp
+
+#change TIPP such that it print taxonids instead of taxon names
+RUN sed -i "s/tax_name/tax_id/" /usr/local/lib/python2.7/dist-packages/sepp-3.0-py2.7.egg/sepp/metagenomics.py
+
+#download the NCBI taxonomy from NCBI's FTP server
+RUN mkdir -p ${PREFIX}/share/taxonomy/
+RUN wget -q -O ${PREFIX}/share/taxonomy/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+RUN tar xzvf ${PREFIX}/share/taxonomy/taxdump.tar.gz -C ${PREFIX}/share/taxonomy/
+RUN rm -f ${PREFIX}/share/taxonomy/taxdump.tar.gz
+#note the download date of the NCBI taxonomy
+RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
+
+ENV MAPPERNAME IDmapper
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
+
+#install a tool to convert from fastq to fasta
+RUN apt-get install -y --no-install-recommends seqtk
+
+ADD inputlist_reads_interleaved.txt ${IO}/
+ADD inputlist_contigs.txt ${IO}/
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
+
+ENV PATH=${PREFIX}/bin:${PATH}
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
+
+ENTRYPOINT ["task.pl"]
