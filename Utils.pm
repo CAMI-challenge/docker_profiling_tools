@@ -357,7 +357,7 @@ sub executeTasks {
 		if ($skip eq 'false') {
 			print qx(bash -c '$cmdString');
 		} else {
-			print "\t *** using previously computed results for this input. ***\n";
+			print "\t*** using previously computed results for this input. ***\n";
 		}
 		my $endtime = time();
 		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
