@@ -346,7 +346,19 @@ sub executeTasks {
 		print join(";\n\t", @{$task{commands}})."\n";
 		my $cmdString = join(" ; ", @{$task{commands}});
 		my $starttime = time();
-		print qx(bash -c '$cmdString');
+		my $skip = 'false';
+		if (-e $task{resultfilename}.".profile") {
+			my $filesampleid = qx(cat $task{resultfilename}.profile | grep "^\@SampleID:" | cut -d ":" -f 2);
+			chomp $filesampleid;
+			if ($filesampleid eq $task{inputfile}) {
+				$skip = 'true';
+			}
+		}
+		if ($skip eq 'false') {
+			print qx(bash -c '$cmdString');
+		} else {
+			print "\t *** using previously computed results for this input. ***\n";
+		}
 		my $endtime = time();
 		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
 		print "".('#' x 80)."\n\n";
