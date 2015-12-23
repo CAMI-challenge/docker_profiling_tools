@@ -9,13 +9,13 @@ $programs{amphora2} 	= {ram => 10}; #ram in GB
 $programs{focus} 			= {ram => 10}; #ram in GB
 $programs{metaphlan2} 	= {ram => 10}; #ram in GB
 $programs{metaphyler} 	= {ram => 40}; #ram in GB
-$programs{metaphyler_nx} 	= {ram => 40, ncores => 4}; #ram in GB
+$programs{metaphyler_nx} 	= {ram => 40, ncores => 20}; #ram in GB
 $programs{motu} 				= {ram => 10}; #ram in GB
 $programs{phylosift} 		= {ram => 40}; #ram in GB
 $programs{commonkmers} = {ram => 45, ncores => 4, mounts => [{host => '/vol/projects/sjanssen/CAMI/ReferenceData/commonkmers/', container => '/exchange/db/', permissions => 'ro'}]}; #ram in GB
 $programs{quickr} = {ram => 20, ncores => 4}; #ram in GB
 $programs{taxypro} = {ram => 15}; #ram in GB
-$programs{tipp} = {ram => 8}; #ram in GB
+$programs{tipp} = {ram => 50, ncores => 20}; #ram in GB
 
 my ($toolname, $justprint) = @ARGV;
 die "usage: perl $0 <toolname> [justprint]\n  toolname = name of the profiling tool to run on the cluster.\n  justprint = if defined, just print the content of the cluster script to STDOUT, but don't actually submit.\n" if (@ARGV < 1 || @ARGV > 2);
