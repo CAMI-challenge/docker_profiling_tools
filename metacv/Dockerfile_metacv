@@ -1,0 +1,78 @@
+FROM ubuntu:14.04
+MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+
+#needed if on Michaels cluster
+ENV http_proxy http://172.16.20.249:3128
+ENV https_proxy http://172.16.20.249:3128
+
+ENV TOOLNAME metacv
+ENV NCORES 4
+
+#update underlying linux system
+RUN apt-get update -y
+
+#list of all dependencies that can be satisfied via the package management system of Ubuntu
+ENV PACKAGES wget g++ gcc make seqtk patch git ca-certificates
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#directory for in and output with the host system
+ENV IO /exchange/
+
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/bin/
+RUN mkdir -p ${PREFIX}/src/
+
+RUN mkdir -p ${IO}/input/
+RUN mkdir -p ${IO}/output/
+
+ENV MAPPERNAME IDmapper
+ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
+
+ADD inputlist_reads_interleaved.txt ${IO}/
+
+ENV PATH=${PREFIX}/bin:${PATH}
+ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
+#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
+ENV CONT_PROFILING_FILES ${IO}/output/
+
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.tgz http://downloads.sourceforge.net/project/metacv/metacv_2_3_0.tgz
+RUN tar xzvf ${PREFIX}/src/${TOOLNAME}.tgz -C ${PREFIX}/src/
+RUN mv ${PREFIX}/src/metacv_* ${PREFIX}/src/${TOOLNAME}/
+RUN rm -f ${PREFIX}/src/${TOOLNAME}.tgz
+RUN cd ${PREFIX}/src/${TOOLNAME}/ && make
+RUN mv ${PREFIX}/src/${TOOLNAME}/metacv ${PREFIX}/bin/
+
+#download the NCBI taxonomy from NCBI's FTP server
+RUN mkdir -p ${PREFIX}/share/taxonomy/
+RUN wget -q -O ${PREFIX}/share/taxonomy/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
+RUN tar xzvf ${PREFIX}/share/taxonomy/taxdump.tar.gz -C ${PREFIX}/share/taxonomy/
+RUN rm -f ${PREFIX}/share/taxonomy/taxdump.tar.gz
+#note the download date of the NCBI taxonomy
+RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
+
+RUN mkdir -p ${PREFIX}/share/metacv_database/
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part00 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part00
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part01 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part01
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part02 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part02
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part03 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part03
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part04 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part04
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part05 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part05
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part06 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part06
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part07 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part07
+RUN cd ${PREFIX}/share/metacv_database/ && cat db.part* | tar xvfzp -
+RUN rm -f ${PREFIX}/share/metacv_database/db.part*
+
+#~ RUN git config --global url."https://".insteadOf git://
+#~ RUN git clone https://gist.github.com/3521724.git ${PREFIX}/src/deinterleave
+#~ RUN mv ${PREFIX}/src/deinterleave/deinterleave_fastq.sh ${PREFIX}/bin/deinterleave_fastq.sh
+ADD ${TOOLNAME}/deinterleave.pl ${PREFIX}/bin/deinterleave.pl
+RUN chmod a+x ${PREFIX}/bin/deinterleave.pl
+
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
+
+ENTRYPOINT ["task.pl"]
