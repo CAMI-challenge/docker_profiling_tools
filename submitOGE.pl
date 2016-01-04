@@ -16,6 +16,7 @@ $programs{commonkmers} = {ram => 45, ncores => 4, mounts => [{host => '/vol/proj
 $programs{quickr} = {ram => 20, ncores => 4}; #ram in GB
 $programs{taxypro} = {ram => 15}; #ram in GB
 $programs{tipp} = {ram => 50, ncores => 20}; #ram in GB
+$programs{metacv} = {ram => 100, ncores => 4}; #ram in GB
 
 my ($toolname, $justprint) = @ARGV;
 die "usage: perl $0 <toolname> [justprint]\n  toolname = name of the profiling tool to run on the cluster.\n  justprint = if defined, just print the content of the cluster script to STDOUT, but don't actually submit.\n" if (@ARGV < 1 || @ARGV > 2);
@@ -29,7 +30,8 @@ if (defined $script) {
 		open (OUT, "> $scriptfilename") || die "cannot write: $!";
 			print OUT $script;
 		close (OUT);
-		print qx(qsub $scriptfilename);
+		#~ print qx(qsub $scriptfilename);
+		print qx(qsub -l hostname=bioinf003 $scriptfilename);
 		unlink $scriptfilename;
 	}
 }
