@@ -3,7 +3,7 @@ MetaPhLan	marker based			a fastq file containing metagenomic reads, no contigs!
 Phylosift	protein marker based	contigs
 Amphora2							contigs
 mOTU								only raw reads
-metaphyler	?						raw reads (uses blastn and blastx, where the later seems to be very slow)
+metaphyler	?						raw reads (uses blastn and blastx, where the later seems to be very slow) Auch nach 12 Tagen liefert blastn + blastx keine Ergebnisse.
 focus		kmer composition		raw reads
 GASiC	laeut Martin Lindner nicht fuer CAMI geeignet, will sollen statt dessen MicrobeGPS aus dem GIT Repository (weil dann mit CLI) nehmen.
 quickR	laut David Koslicki eigentlich nur fuer 16S Daten geeignet, er bastelt aber ein workaround fuer CAMI. Muss in der Publikation aber so erklaert werden.
