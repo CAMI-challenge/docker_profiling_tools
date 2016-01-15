@@ -38,7 +38,20 @@ if (-e $dirWithNCBItaxDump."/taxdump.tar.gz.date") {
 my %tree = ();
 my %NCBItaxonomy = %{Utils::read_taxonomytree($dirWithNCBItaxDump."/nodes.dmp")};
 my %NCBInames = %{Utils::read_taxonomyNames($dirWithNCBItaxDump."/names.dmp")};
+my %NCBImerged = %{Utils::read_taxonomyMerged($dirWithNCBItaxDump."/merged.dmp")};
 foreach my $taxid (sort keys(%frequencies)) {
+	if (not exists $NCBItaxonomy{$taxid}) {
+		if (not exists $NCBImerged{$taxid}) {
+			print STDERR "a no match for '$taxid'\n";
+			next;
+		} else {
+			$taxid = $NCBImerged{$taxid};
+			if (not exists $NCBItaxonomy{$taxid}) {
+				print STDERR "b no match for '$taxid'\n";
+				next;
+			}
+		}
+	}
 	my @lineage = @{Utils::getLineage($taxid, \%NCBItaxonomy)};
 	Utils::addNamesToLineage(\@lineage, \%NCBInames);
 	my $abundance = 0;
