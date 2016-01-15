@@ -269,19 +269,45 @@ sub isWantedRank {
 	return 0;
 }
 
-
 sub generateOutput {
 	my ($programname, $sampleIDname, $tree, $taxonomydate) = @_;
+	
+	my %headers = (
+		'SampleID', $sampleIDname,
+		'Version', '0.9.3',
+		'Ranks', join("|", @Utils::RANKS),
+		'TaxonomyID', 'ncbi-taxonomy_'.$taxonomydate,
+		'__program__', $programname,
+	);
+	
+	return generateOutput_general(\%headers, $tree);
+}
+
+sub generateOutput_general {
+	my ($header, $tree) = @_;
 	
 	my $output = "";
 	my @resultlines = ();
 	Utils::printProfile($tree, \@resultlines);
 	$output .= "# Taxonomic Profiling Output\n";
-	$output .= '@'."SampleID:".$sampleIDname."\n";
-	$output .= '@'."Version:0.9.3\n";
-	$output .= '@'."Ranks:".join("|", @Utils::RANKS)."\n";
-	$output .= '@'."TaxonomyID:ncbi-taxonomy_".$taxonomydate."\n";
-	$output .= '@'."__program__:".$programname."\n";
+	my %preferedOrdering = (
+		'SampleID', 0,
+		'Version', 1,
+		'Ranks', 2,
+		'TaxonomyID', 3,
+		'__program__', 4
+	);
+	foreach my $key (sort {$preferedOrdering{$a} <=> $preferedOrdering{$b}} keys(%preferedOrdering)) {
+		$output .= '@'.$key.":".$header->{$key}."\n" if (exists $header->{$key});
+	}
+	foreach my $key (keys(%{$header})) {
+		$output .= '@'.$key.":".$header->{$key}."\n" if (not exists $preferedOrdering{$key});
+	}
+	#~ $output .= '@'."SampleID:".$sampleIDname."\n";
+	#~ $output .= '@'."Version:0.9.3\n";
+	#~ $output .= '@'."Ranks:".join("|", @Utils::RANKS)."\n";
+	#~ $output .= '@'."TaxonomyID:ncbi-taxonomy_".$taxonomydate."\n";
+	#~ $output .= '@'."__program__:".$programname."\n";
 	$output .= '@@'.join("\t", ('TAXID', 'RANK', 'TAXPATH', 'TAXPATHSN', 'PERCENTAGE'))."\n";
 	foreach my $result (sort {(Utils::rankToLevel($a->{rank}) cmp Utils::rankToLevel($b->{rank})) || ($a->{namepath} cmp $b->{namepath})} @resultlines) {
 		$output .= "#" if ($result->{taxid} < 1);
