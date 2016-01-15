@@ -7,3 +7,24 @@ metaphyler	?						raw reads (uses blastn and blastx, where the later seems to be
 focus		kmer composition		raw reads
 GASiC	laeut Martin Lindner nicht fuer CAMI geeignet, will sollen statt dessen MicrobeGPS aus dem GIT Repository (weil dann mit CLI) nehmen.
 quickR	laut David Koslicki eigentlich nur fuer 16S Daten geeignet, er bastelt aber ein workaround fuer CAMI. Muss in der Publikation aber so erklaert werden.
+
+
+
+Check if self build tools might violate the CAMI Challenge deadline:
+	#Toolname	might use newer data	comment, 
+	amphora2	OK	last git commit Commits on Mar 5, 2014
+	commonkmers	OK	docker image: dkoslicki/commonkmers "Last pushed: 6 months ago" "Created": "2015-07-17T14:54:30.90551024Z", kmer database: http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz latest file 7th July 2015
+	focus		OK	image: linsalrob/cfk8bd "Created": "2015-07-18T00:26:49.682178727Z", files in /home: latest Jul 17 2015
+	metacv	OK	sources http://downloads.sourceforge.net/project/metacv/metacv_2_3_0.tgz 2013-01-22, database: http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part0* 2012-10-09
+	metaphlan2	OK	sources https://bitbucket.org/biobakery/metaphlan2/, only bugfixes since CAMI deadline. latest update to database 2015-06-17
+	metaphyler	OK	sources: http://metaphyler.cbcb.umd.edu/MetaPhylerV1.25.tar.gz "New version (05/23/2012)"
+	motu	OK	sources: http://www.bork.embl.de/software/mOTU/share/mOTUs.Linux64bits.tar.gz Jan 10th 2014, 
+	phylosift	OK	sources: http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift/phylosift_latest.tar.bz2 2014-04-19, database: http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift_markers/markers.tgz 2014-10-22
+	taxypro	OK	docker image: "Last pushed: 6 months ago" "Created": "2015-07-17T20:22:50.306289962Z"
+	tipp	OK	sources: https://github.com/smirarab/sepp latest commits only bugfixes since CAMI deadline=OK, http://www.cs.utexas.edu/~phylo/software/sepp/tipp-submission/master.zip 2014-09-09=OK, database: www.cs.utexas.edu/~phylo/software/sepp/tipp.zip: 2015-02-12=OK
+
+	carma3	?
+	clark	?
+	kraken	?
+	mltreemap	?
+	quickr	?
