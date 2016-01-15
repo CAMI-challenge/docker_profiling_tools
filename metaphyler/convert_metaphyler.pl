@@ -34,11 +34,13 @@ open (IN, $filename_tooloutput) || die "cannot read orginal input file '$filenam
 		$taxid =~ s/\(\d+\.\d*\)//;
 		if (not exists $NCBItaxonomy{$taxid}) {
 			if (not exists $NCBImerged{$taxid}) {
-				die "no match for '$line'";
+				print STDERR "a) no match for '$line'\n";
+				next;
 			} else {
 				$taxid = $NCBImerged{$taxid};
 				if (not exists $NCBItaxonomy{$taxid}) {
-					die "no match for '$line'";
+					print STDERR "b) no match for '$line'\n";
+					next;
 				}
 			}
 		}

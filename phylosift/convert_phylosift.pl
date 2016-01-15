@@ -49,6 +49,7 @@ close (IN);
 my %tree = ();
 my %NCBItaxonomy = %{Utils::read_taxonomytree($dirWithNCBItaxDump."/nodes.dmp")};
 my %NCBInames = %{Utils::read_taxonomyNames($dirWithNCBItaxDump."/names.dmp")};
+my %NCBImerged = %{Utils::read_taxonomyMerged($dirWithNCBItaxDump."/merged.dmp")};
 foreach my $taxon (@taxa) {
 	if ($totalreads > 0) {
 		$taxon->{abundance} = $taxon->{readcount} / $totalreads * 100;
@@ -57,6 +58,18 @@ foreach my $taxon (@taxa) {
 	}
 	delete $taxon->{readcount};
 	if ($taxon->{taxid} > 0) {
+		if (not exists $NCBItaxonomy{$taxon->{taxid}}) {
+			if (not exists $NCBImerged{$taxon->{taxid}}) {
+				print STDERR "a) no match for '$taxon->{taxid}'\n";
+				next;
+			} else {
+				$taxon->{taxid} = $NCBImerged{$taxon->{taxid}};
+				if (not exists $NCBItaxonomy{$taxon->{taxid}}) {
+					print STDERR "b) no match for '$taxon->{taxid}'\n";
+					next;
+				}
+			}
+		}
 		$taxon->{lineage} = Utils::getLineage($taxon->{taxid}, \%NCBItaxonomy);
 		Utils::addNamesToLineage($taxon->{lineage}, \%NCBInames);
 	}
