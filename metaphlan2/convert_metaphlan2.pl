@@ -48,14 +48,20 @@ close (IN);
 assignRealAbundance(\%metaphlanTree); #handle cases where a strain like "t__Ruminococcus_gnavus_unclassified" with its abundance points in reality to the according species, i.e. "s__Ruminococcus_gnavus". That might happen on all taxonomic ranks
 my @abundanceLeaves = @{printLeafAbundances(\%metaphlanTree)}; #collect all those leaves and maybe branches of the GreenGene tree that holds a "realAbd"
 
-my %NCBItaxonomy = ();
+my %NCBItaxonomy = %{Utils::read_taxonomytree($dirWithNCBItaxDump."/nodes.dmp")};
 my %NCBInames = ();
+my %NCBImerged = %{Utils::read_taxonomyMerged($dirWithNCBItaxDump."/merged.dmp")};
 my %NCBItax = ('children', undef, 'rank', 'wholeTree', 'name', 'NCBItaxonomy');
 my $idMismappings = -1;
 my @missingTaxa = ();
 foreach my $taxon (sort @abundanceLeaves) {
 	if (exists $markerIDs{$taxon->{name}}) {
-		Utils::addNCBILineage(\%NCBItax, $markerIDs{$taxon->{name}}, $taxon->{abundance});
+		my $taxid = $markerIDs{$taxon->{name}}->[scalar(@{$markerIDs{$taxon->{name}}})-1]->{taxid};
+		if (not defined checkTaxid($taxid, \%NCBItaxonomy, \%NCBImerged)) {
+			$NCBItax{children}->{-3}->{children}->{$taxid} = {abundance => $taxon->{abundance}, rank => 'unknownTaxid', name => $taxon->{lineage}};
+		} else {
+			Utils::addNCBILineage(\%NCBItax, $markerIDs{$taxon->{name}}, $taxon->{abundance});
+		}
 	} else {
 		#species is unclassified, thus we find some "genus" which is not in the known IDs. Genus name is identical to species first word, thus we look for all species containing genus name and look for the deepest common taxid
 		my @lineages = ();
@@ -75,7 +81,12 @@ foreach my $taxon (sort @abundanceLeaves) {
 				
 		if (@lineages > 0) {
 			my @commonLineage = @{Utils::getCommonLineage(\@lineages)};
-			Utils::addNCBILineage(\%NCBItax, \@commonLineage, $taxon->{abundance})
+			my $taxid = $commonLineage[$#commonLineage]->{taxid};
+			if (not defined checkTaxid($taxid, \%NCBItaxonomy, \%NCBImerged)) {
+				$NCBItax{children}->{-3}->{children}->{$taxid} = {abundance => $taxon->{abundance}, rank => 'unknownTaxid', name => $taxon->{lineage}};
+			} else {
+				Utils::addNCBILineage(\%NCBItax, \@commonLineage, $taxon->{abundance});
+			}
 		} else {
 			#eine weiter Quelle um Namen den NCBI taxIDs zuzuordnen würde sich an Peter Hofmanns Idee orientieren und die textuellen Namen aus der names.dmp mit den hier auftauchenden Begriffen vergleichen. Dann könnte man die Lineage aufbauen und gucken, ob der Rang stimmt. Gabe neue Abhängikeiten zu names.dmp und nodes.dmp
 			%NCBItaxonomy = %{Utils::read_taxonomytree($dirWithNCBItaxDump."/nodes.dmp")} if (scalar(keys(%NCBItaxonomy)) == 0);
@@ -83,7 +94,12 @@ foreach my $taxon (sort @abundanceLeaves) {
 			if (@guessedLineage > 0) {
 				%NCBInames = %{Utils::read_taxonomyNames($dirWithNCBItaxDump."/names.dmp")} if (scalar(keys(%NCBInames)) == 0);
 				Utils::addNamesToLineage(\@guessedLineage, \%NCBInames);
-				Utils::addNCBILineage(\%NCBItax, \@guessedLineage, $taxon->{abundance})
+				my $taxid = $guessedLineage[$#guessedLineage]->{taxid};
+				if (not defined checkTaxid($taxid, \%NCBItaxonomy, \%NCBImerged)) {
+					$NCBItax{children}->{-3}->{children}->{$taxid} = {abundance => $taxon->{abundance}, rank => 'unknownTaxid', name => $taxon->{lineage}};
+				} else {
+					Utils::addNCBILineage(\%NCBItax, \@guessedLineage, $taxon->{abundance});
+				}
 			} else {
 				print STDERR "warnings: could not find a NCBI taxid for '".$taxon->{name}."'. Abundance is added to class 'unassigned'.\n";
 				if (not exists $NCBItax{children}->{-1}) {
@@ -100,6 +116,25 @@ markStrains(\%NCBItax);
 Utils::pruneUnwantedRanks(\%NCBItax);
 
 print Utils::generateOutput("metaphlan2", $sampleIDname, \%NCBItax, $taxonomydate);
+
+sub checkTaxid {
+	my ($taxid, $taxononmy, $merged) = @_;
+	
+	if (not exists $taxononmy->{$taxid}) {
+		if (not exists $merged->{$taxid}) {
+			print STDERR "a) no match for '$taxid'\n";
+			$taxid = undef;
+		} else {
+			$taxid = $merged->{$taxid};
+			if (not exists $taxononmy->{$taxid}) {
+				print STDERR "b) no match for '$taxid'\n";
+				$taxid = undef;
+			}
+		}
+	}
+
+	return $taxid;
+}
 
 sub markStrains {
 	#the NCBI taxonomy does not seem to know the rank 'strain'. We want to call a rank below a 'species' and with rank name 'no rank' a 'strain', thus we traverse the tree and rename those ranks
