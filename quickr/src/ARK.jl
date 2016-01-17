@@ -24,12 +24,8 @@ function parse_commandline()
     s = ArgParseSettings()
 
     @add_arg_table s begin
-		"--data_dir", "-d"
-			help = "directory containing all the training files"
         "--input_file", "-i"
 			help = "Fasta file to perform the reconstruction on"
-		"--sampleid", "-s"
-			help = "An arbitrary name for the sample, which shows up in the profile output."
         "--lambda", "-l"
 			help = "Lambda parameter. The lower it is, the sparser the reconstruction. The higher it is, the more closely the kmer counts will be fit. Default is 10,000"
 			default = 10000
@@ -55,9 +51,7 @@ end
 
 #Parse the args
 parsed_args = parse_commandline()
-data_dir = parsed_args["data_dir"]
 input_file = parsed_args["input_file"]
-sample_ID = parsed_args["sampleid"]
 lambda = int(parsed_args["lambda"])
 output_file = parsed_args["output_file"]
 kmer_counts_per_sequence_path = parsed_args["kmer_counts_per_sequence_path"]
@@ -100,7 +94,7 @@ counts_per_sequence=convert(Array{Float64,2},counts_per_sequence);
 #Now run the algorithm
 if training_database == "Quikr" #Using the quikr database
 	#Read in the training database
-	A = h5read("$(data_dir)/trainset7_112011N6C.h5","/data");
+	A = h5read("../../data/trainset7_112011N6C.h5","/data");
 
 	#Form the Aaux
 	Aaux = [ones(1,size(A,2)); lambda*A];
@@ -171,18 +165,18 @@ if training_database == "Quikr" #Using the quikr database
     
     	#write the solution to file
 		output_level = 0; #Since we don't have hypothetical organisms
-		ConvertToCAMIOutput(result_ARK_Quikr, "$(data_dir)/trainset7_taxonomy.txt", output_level, output_file, sample_ID)
+		ConvertToCAMIOutput(result_ARK_Quikr, "../../data/trainset7_taxonomy.txt", output_level, output_file)
 	
 elseif training_database == "SEK" #using the split Quikr database (known as the SEK database)
 
 	#Read in the training database
-	A = h5read("$(data_dir)/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-N6C.h5","/data");
+	A = h5read("../../data/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-N6C.h5","/data");
 	
 	#Form the Aaux
 	Aaux = [ones(1,size(A,2)); lambda*A];
 	
 	#Read in the block matrix to return to the trainset7_SEK basis
-	blockMatrix = h5read("$(data_dir)/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-blockMatrix.h5","/data");
+	blockMatrix = h5read("../../data/trainset7_112011_allseqslongerthan700-SEKTrainingMatrix-bitShift100-windowLength400-blockMatrix.h5","/data");
 	
 	#Do either the random clustering or deterministic
 	if  clustering_type == "Random"
@@ -253,7 +247,10 @@ elseif training_database == "SEK" #using the split Quikr database (known as the 
 		
 	#Write the output to file
 	output_level = 0; #Since we don't have hypothetical organisms
-	ConvertToCAMIOutput(result_ARK_Quikr, "$(data_dir)/trainset7_SEK_taxonomy.txt", output_level, output_file, sample_ID)
+	ConvertToCAMIOutput(result_ARK_Quikr, "../../data/trainset7_SEK_taxonomy.txt", output_level, output_file)
+	success(`grep -v -P '\|\t' $output_file ` |> "Julia_temp_out_file.txt");
+	success(`cp Julia_temp_out_file.txt $output_file `);
+	success(`rm Julia_temp_out_file.txt`)
 else
 	error("Incorrect training database choice (-t). Options are: Quikr, SEK")
 end
