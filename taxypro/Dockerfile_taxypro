@@ -6,7 +6,6 @@ ENV http_proxy http://172.16.20.249:3128
 ENV https_proxy http://172.16.20.249:3128
 
 ENV TOOLNAME taxypro
-ENV NCORES 4
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
 ENV PACKAGES dpatch

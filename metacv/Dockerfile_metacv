@@ -6,7 +6,6 @@ ENV http_proxy http://172.16.20.249:3128
 ENV https_proxy http://172.16.20.249:3128
 
 ENV TOOLNAME metacv
-ENV NCORES 4
 
 #update underlying linux system
 RUN apt-get update -y
