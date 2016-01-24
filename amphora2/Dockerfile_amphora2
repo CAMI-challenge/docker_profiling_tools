@@ -1,25 +1,26 @@
 FROM ubuntu:14.04
 MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
+ENV TOOLNAME amphora2
 
 #needed if on Michaels cluster
 ENV http_proxy http://172.16.20.249:3128
 ENV https_proxy http://172.16.20.249:3128
 
-ENV TOOLNAME amphora2
-ENV MAPPERNAME IDmapper
+#update underlying linux system
+RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget curl git ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc
+ENV PACKAGES wget curl git ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc cpanminus clustalo libgd-perl bioperl emboss patch
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+ENV MAPPERNAME IDmapper
+
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 #directory for in and output with the host system
 ENV IO /exchange/
   
-#update underlying linux system
-RUN apt-get update -y
-
-#install dependencies
-RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
 #create prefix directory and src subdirectory
 RUN mkdir -p ${PREFIX}/src
@@ -42,16 +43,10 @@ RUN cd ${PREFIX}/src/raxml && make -f Makefile.PTHREADS.gcc && rm *.o
 RUN cp ${PREFIX}/src/raxml/raxmlHPC* ${PREFIX}/bin/
 
 #bioperl
-RUN apt-get install -y --no-install-recommends clustalo libgd-perl bioperl
-RUN apt-get install -y --no-install-recommends cpanminus
 RUN cpanm -v LWP::Simple
-
-#EMBOSS
-RUN apt-get install -y --no-install-recommends emboss
 
 ##patch bioperl to operate with strange Newick trees
 ADD ${TOOLNAME}/bioperl_newick.patch ${PREFIX}/src/
-RUN apt-get install -y --no-install-recommends patch
 RUN patch /usr/share/perl5/Bio/TreeIO/NewickParser.pm < ${PREFIX}/src/bioperl_newick.patch
 
 #replace amphoras version of the NCBI taxonomy with a more current one

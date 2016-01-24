@@ -7,18 +7,10 @@ ENV https_proxy http://172.16.20.249:3128
 
 ENV TOOLNAME commonkmers
 
-#list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES ""
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 #directory for in and output with the host system
 ENV IO /exchange/
-
-#update underlying linux system
-#~ RUN apt-get update -y
-
-#install dependencies
-#~ RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
 #create prefix directory and src subdirectory
 RUN mkdir -p ${PREFIX}/bin/

@@ -5,20 +5,21 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV http_proxy http://172.16.20.249:3128
 ENV https_proxy http://172.16.20.249:3128
 
-ENV TOOLNAME tipp
-
 #update underlying linux system
 RUN apt-get update -y
+ENV TOOLNAME tipp
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget curl bc unzip python default-jre ncbi-blast+
+ENV PACKAGES wget curl bc unzip python default-jre ncbi-blast+ git seqtk
+#install dependencies
+RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
 #directory for in and output with the host system
 ENV IO /exchange/
 
-#install dependencies
-RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
 #create prefix directory and src subdirectory
 RUN mkdir -p ${PREFIX}/src/
@@ -37,7 +38,6 @@ ENV REFERENCE ${PREFIX}/share/tipp/
 ENV BLAST /usr/bin/blastn
 
 #install SEPP
-RUN apt-get install -y --no-install-recommends git
 RUN git config --global url."https://".insteadOf git://
 RUN git clone https://github.com/smirarab/sepp ${PREFIX}/src/sepp
 RUN cd ${PREFIX}/src/sepp && python setup.py install && python setup.py config
@@ -66,9 +66,6 @@ RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
 ENV MAPPERNAME IDmapper
 ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
 ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
-
-#install a tool to convert from fastq to fasta
-RUN apt-get install -y --no-install-recommends seqtk
 
 ADD inputlist_reads_interleaved.txt ${IO}/
 ADD inputlist_contigs.txt ${IO}/
