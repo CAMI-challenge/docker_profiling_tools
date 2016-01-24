@@ -1,5 +1,5 @@
 FROM gobics/taxypro
-MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 
 #needed if on Michaels cluster
 ENV http_proxy http://172.16.20.249:3128

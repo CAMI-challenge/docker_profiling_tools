@@ -1,5 +1,5 @@
 FROM ubuntu:14.04
-MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 
 #needed if on Michaels cluster
 ENV http_proxy http://172.16.20.249:3128
@@ -50,7 +50,6 @@ ADD inputlist_reads_interleaved.txt ${IO}/
 ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
 ENV CONT_PROFILING_FILES ${IO}/output/
 
-ENV NCORES 4
 ENV PATH=${PREFIX}/bin:${PATH}
 
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl

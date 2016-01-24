@@ -1,12 +1,11 @@
 FROM ubuntu:14.04
-MAINTAINER Stefan Janssen, stefan.janssen@helmholtz-hzi.de
+MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 
 #needed if on Michaels cluster
 ENV http_proxy http://172.16.20.249:3128
 ENV https_proxy http://172.16.20.249:3128
 
 ENV TOOLNAME amphora2
-ENV NCORES 4
 ENV MAPPERNAME IDmapper
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
@@ -34,12 +33,12 @@ RUN wget -q -O ${PREFIX}/src/hmmer3.tgz http://selab.janelia.org/software/hmmer3
 RUN tar xzvf ${PREFIX}/src/hmmer3.tgz -C ${PREFIX}/src/
 RUN rm ${PREFIX}/src/hmmer3.tgz
 RUN cn=`find ${PREFIX}/src/ -name "hmmer-*" -type d` && mv $cn ${PREFIX}/src/hmmer3
-RUN cd ${PREFIX}/src/hmmer3 && ./configure --prefix=${PREFIX} && make -j ${NCORES} && make install
+RUN cd ${PREFIX}/src/hmmer3 && ./configure --prefix=${PREFIX} && make && make install
 
 #raxml
 RUN git clone https://github.com/stamatak/standard-RAxML.git ${PREFIX}/src/raxml
-RUN cd ${PREFIX}/src/raxml && make -f Makefile.gcc -j ${NCORES} && rm *.o
-RUN cd ${PREFIX}/src/raxml && make -f Makefile.PTHREADS.gcc -j ${NCORES} && rm *.o
+RUN cd ${PREFIX}/src/raxml && make -f Makefile.gcc && rm *.o
+RUN cd ${PREFIX}/src/raxml && make -f Makefile.PTHREADS.gcc && rm *.o
 RUN cp ${PREFIX}/src/raxml/raxmlHPC* ${PREFIX}/bin/
 
 #bioperl
