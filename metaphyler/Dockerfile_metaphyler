@@ -13,8 +13,6 @@ RUN apt-get update -y
 ENV PACKAGES wget curl bc ncbi-blast+ ca-certificates make libc6-dev libc-dev gcc-4.8-locales gcc-multilib manpages-dev autoconf automake1.9 libtool flex bison gdb gcc-4.8-multilib libgcc1-dbg libgomp1-dbg libitm1-dbg libatomic1-dbg libasan0-dbg libtsan0-dbg libquadmath0-dbg gcc g++ seqtk patch
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
-ENV PERL_MM_USE_DEFAULT 1 
-RUN perl -MCPAN -e 'install YAML::Tiny'
 
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
@@ -41,6 +39,10 @@ ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
 ADD downloadTaxonomy.pl ${PREFIX}/bin/
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
+
+#download Perl YAML parser directly from CPAN site, since cpan does not easily work with proxies
+RUN mkdir -p ${PREFIX}/lib/YAML/
+RUN wget -q -O ${PREFIX}/lib/YAML/Tiny.pm http://cpansearch.perl.org/src/ETHER/YAML-Tiny-1.69/lib/YAML/Tiny.pm
 
 #download the NCBI taxonomy from NCBI's FTP server
 RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
