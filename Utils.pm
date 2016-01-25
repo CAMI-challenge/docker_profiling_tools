@@ -425,6 +425,10 @@ sub executeTasks {
 		my %task = %{$refList_tasks->[$i]};
 		print "".('#' x 80)."\n";
 		print "EXECUTING TASK NO. ".($i+1)." of ".scalar(@{$refList_tasks}).":\n\t";
+		
+		unshift @{$task{commands}}, "tmpdir=`mktemp --suffix=\"".$ENV{TOOLNAME}."\" --tmpdir=\"".$task{cacheDir}."\" -d`";
+		unshift @{$task{commands}}, "cd \$tmpdir";
+		
 		push @{$task{commands}}, "chmod a+rw ".$task{resultfilename}.".*";
 		print join(";\n\t", @{$task{commands}})."\n";
 		my $cmdString = join(" ; ", @{$task{commands}});
