@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use YAML::Tiny;
 
 package Utils;
 
@@ -358,6 +359,62 @@ sub collectTasks {
 	}
 	
 	return \@tasks;
+}
+
+sub collectYAMLtasks {
+	my $resDir = "/bbx/mnt/output/";
+	
+	my ($yamlfile) = @_;
+	$yamlfile = $ENV{YAML} if (not defined $yamlfile);
+		
+	die "yaml files '$yamlfile' does not exist.\n" if (not -e $yamlfile);
+	my $yaml = YAML::Tiny->read($yamlfile);
+	my @tasks = ();
+	
+	my $cache = "/tmp";
+	$cache = $yaml->[0]->{arguments}->{cache} if (defined $yaml->[0]->{arguments}->{cache} && -d $yaml->[0]->{arguments}->{cache});
+	$cache = absFilename($cache);
+	die "cache '$cache' is not a writable directory.\n" if ((not -d $cache) || (not -w $cache));
+
+	my $taxDir = "/";
+	$taxDir = $ENV{PREFIX}."/share/taxonomy/" if (defined $ENV{PREFIX});
+	$taxDir = $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path} if (defined $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path} && -d $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path});	
+	my @missingTaxFiles = ();
+	push @missingTaxFiles, "nodes.dmp" if (not -e $taxDir."/nodes.dmp");
+	push @missingTaxFiles, "names.dmp" if (not -e $taxDir."/names.dmp");
+	push @missingTaxFiles, "merged.dmp" if (not -e $taxDir."/merged.dmp");
+	die "cannot find file(s) '".join("', '", @missingTaxFiles)."' in taxonomy directory '".$taxDir."'.\n" if (@missingTaxFiles > 0);
+	
+	my $taskID = 0;
+	foreach my $listing (@{$yaml->[0]->{arguments}->{reads}}) {
+		my $basename = qx(basename $listing->{path}); chomp $basename;
+		if (not -e $listing->{path}) {
+			print STDERR "cannot read input file '".$listing->{path}."'.\n";
+			$taskID++;
+		} else {
+			if (-d $resDir && -w $resDir) {
+				push @tasks, {
+					inputfile => $listing->{path}, 
+					resultfilename => $resDir."/result_".($taskID+1)."__".$basename,
+					cacheDir => $cache,
+					taxonomyDir => $taxDir,
+				};
+			} else {
+				die "result directory '".$resDir."' is not writable.\n";
+			}
+		}
+	}
+	
+	return \@tasks;
+}
+
+sub absFilename {
+	my ($filename) = @_;
+	
+	my $afn = qx(readlink -m "$filename");
+	chomp $afn;
+	
+	return $afn;
 }
 
 sub executeTasks {
