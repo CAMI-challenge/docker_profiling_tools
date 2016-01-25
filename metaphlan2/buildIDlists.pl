@@ -1,11 +1,15 @@
 #!/usr/bin/env perl
 
+use lib "../";
+use lib "/biobox/lib/";
+
 use strict;
 use warnings;
 use Data::Dumper;
 use XML::XPath;
 use XML::XPath::XMLParser;
 use Utils;
+use YAML::Tiny;
 
 #files which holds taxonomy information and will be downloaded to the local machine
 my @filesToDownload = (

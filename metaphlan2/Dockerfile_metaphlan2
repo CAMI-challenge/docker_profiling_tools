@@ -3,57 +3,56 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV TOOLNAME metaphlan2 
 
 #needed if on Michaels cluster
-ENV http_proxy http://172.16.20.249:3128
-ENV https_proxy http://172.16.20.249:3128
+#~ ENV http_proxy http://172.16.20.249:3128
+#~ ENV https_proxy http://172.16.20.249:3128
 
 #update underlying linux system
 RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES mercurial python-numpy python-biom-format bowtie2 libxml-xpath-perl wget unzip
+ENV PACKAGES python-numpy python-biom-format bowtie2 libxml-xpath-perl wget unzip make
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
-
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
-ENV IO /exchange/
-
-
 #create prefix directory and src subdirectory
-RUN mkdir -p ${PREFIX}/src
-#adding fingerprint for bitbucket.org for seamless hg cloning from that site
-RUN echo "[hostfingerprints]" >> ~/.hgrc && echo "bitbucket.org = 46:de:34:e7:9b:18:cd:7f:ae:fd:8b:e3:bc:f4:1a:5e:38:d7:ac:24" >> ~/.hgrc
+RUN mkdir -p ${PREFIX}/src/ ${PREFIX}/bin/ ${PREFIX}/lib/ ${PREFIX}/share/ 
+ENV PATH=${PREFIX}/bin:${PATH}
+
+
+
 #download the latest version of MetaPhlAn2
-#RUN hg clone https://bitbucket.org/biobakery/metaphlan2 ${PREFIX}/src/${TOOLNAME}
 RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://bitbucket.org/biobakery/metaphlan2/get/3d22a72b109b.zip
 RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
 RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
 
+#add my Perl scripts
+ADD Utils.pm ${PREFIX}/lib/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
+
+#download Perl YAML parser directly from CPAN site, since cpan does not easily work with proxies
+RUN mkdir -p ${PREFIX}/lib/YAML/
+RUN wget -q -O ${PREFIX}/lib/YAML/Tiny.pm http://cpansearch.perl.org/src/ETHER/YAML-Tiny-1.69/lib/YAML/Tiny.pm
+
+#download the NCBI taxonomy from NCBI's FTP server
+RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+
 #metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
 ENV MAPPERNAME IDmapper
 ENV MAPPERRESULT ${PREFIX}/share/${MAPPERNAME}/mappingresults.txt
-
-ADD ${TOOLNAME}/buildIDlists.pl ${TOOLNAME}/convert_${TOOLNAME}.pl Utils.pm ${PREFIX}/src/${MAPPERNAME}/
+ADD ${TOOLNAME}/buildIDlists.pl ${PREFIX}/bin/${MAPPERNAME}.pl
 ADD ${TOOLNAME}/workdir/Assembly_result.xml ${TOOLNAME}/workdir/bioproject_result.xml ${TOOLNAME}/workdir/manual.txt ${PREFIX}/share/${MAPPERNAME}/workdir/
-
 #run the one time mapping from "species2genomes.txt" into NCBI taxids and store the result in $MAPPERRESULT
 #since the NCBI taxonomy is not static, it might happen that some taxids are no longer used, i.e. the following program crashes. Try to manually update the XML files via the NCBI batch entrez system.
-RUN perl -I ${PREFIX}/src/${MAPPERNAME}/ ${PREFIX}/src/${MAPPERNAME}/buildIDlists.pl ${PREFIX}/src/${TOOLNAME}/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 
+RUN perl -I ${PREFIX}/lib/ ${PREFIX}/bin/${MAPPERNAME}.pl ${PREFIX}/src/${TOOLNAME}/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 
 #should the previous command be successful, temporary files in workdir/Downloads can be deleted
-RUN rm -rf ${PREFIX}/share/${MAPPERNAME}/workdir/Downloads
+RUN rm -rf ${PREFIX}/share/${MAPPERNAME}/workdir
 
-RUN mkdir -p ${IO}/input/
-RUN mkdir -p ${IO}/output/
-ADD inputlist_reads_interleaved.txt ${IO}/
 
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-ENV CONT_PROFILING_FILES ${IO}/output/
-
-ENV PATH=${PREFIX}/bin:${PATH}
-
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl
-
+ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
