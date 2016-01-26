@@ -351,7 +351,7 @@ sub collectTasks {
 							#call for contig as inputs
 							$type = $TYPE_CONTIGS;
 						}
-						push @tasks, {inputfile => $line, type => $type, resultfilename => $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1)};
+						push @tasks, {inputfile => $line, type => $type, resultfilename => $ENV{CONT_PROFILING_FILES}."/result_".(@tasks+1), commands => []};
 					#~ }
 				}
 			close (IN);
@@ -387,17 +387,18 @@ sub collectYAMLtasks {
 	
 	my $taskID = 0;
 	foreach my $listing (@{$yaml->[0]->{arguments}->{reads}}) {
+		$taskID++;
 		my $basename = qx(basename $listing->{path}); chomp $basename;
 		if (not -e $listing->{path}) {
 			print STDERR "cannot read input file '".$listing->{path}."'.\n";
-			$taskID++;
 		} else {
 			if (-d $resDir && -w $resDir) {
 				push @tasks, {
 					inputfile => $listing->{path}, 
-					resultfilename => $resDir."/result_".($taskID+1)."__".$basename,
+					resultfilename => $resDir."/result_".$taskID."__".$basename,
 					cacheDir => $cache,
 					taxonomyDir => $taxDir,
+					commands => [],
 				};
 			} else {
 				die "result directory '".$resDir."' is not writable.\n";
@@ -426,10 +427,14 @@ sub executeTasks {
 		print "".('#' x 80)."\n";
 		print "EXECUTING TASK NO. ".($i+1)." of ".scalar(@{$refList_tasks}).":\n\t";
 		
-		unshift @{$task{commands}}, "tmpdir=`mktemp --suffix=\"".$ENV{TOOLNAME}."\" --tmpdir=\"".$task{cacheDir}."\" -d`";
-		unshift @{$task{commands}}, "cd \$tmpdir";
+		unshift @{$task{commands}}, (
+			"tmpdir=`mktemp --suffix=\"_".$ENV{TOOLNAME}."\" --tmpdir=\"".$task{cacheDir}."\" -d`",
+			"chmod a+rwx \$tmpdir",
+			"cd \$tmpdir"
+		);
 		
 		push @{$task{commands}}, "chmod a+rw ".$task{resultfilename}.".*";
+		push @{$task{commands}}, "chmod a+rwx \"\$tmpdir\"";
 		print join(";\n\t", @{$task{commands}})."\n";
 		my $cmdString = join(" ; ", @{$task{commands}});
 		my $starttime = time();
