@@ -10,22 +10,14 @@ use Utils;
 
 my @tasks = @{Utils::collectTasks()};
 foreach my $task (@tasks) {
-	$task->{commands} = [];
+	push @{$task->{commands}}, (
 	
-	if ($task->{type} eq $Utils::TYPE_READ_SINGLE) {
-		#call for single end read inputs
-	} elsif ($task->{type} eq $Utils::TYPE_READ_PAIRED) {
-		#call for paired end read inputs
-	} elsif ($task->{type} eq $Utils::TYPE_CONTIGS) {
-		#call for contig as inputs
-	}
+		"perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/mOTUs.pl --processors=`nproc` ".$task->{inputfile},
+		"resfile=`find /tmp/ -name \"*insert.mm.dist.among.unique.scaled.taxaid.gz\"`",
+		"zcat \$resfile > ".$task->{resultfilename}.".orig",
+		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
 	
-	push @{$task->{commands}}, "rm -rf /tmp/motus.*";
-	push @{$task->{commands}}, "cd /tmp/";
-	push @{$task->{commands}}, "perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/mOTUs.pl --processors=".$ENV{NCORES}." ".$task->{inputfile};
-	push @{$task->{commands}}, "resfile=`find /tmp/ -name \"*insert.mm.dist.among.unique.scaled.taxaid.gz\"`";
-	push @{$task->{commands}}, "zcat \$resfile > ".$task->{resultfilename}.".orig";
-	push @{$task->{commands}}, "perl -I ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/ ".$ENV{PREFIX}."/src/".$ENV{MAPPERNAME}."/convert.pl ".$task->{resultfilename}.".orig ".$ENV{PREFIX}."/share/taxonomy/ \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile";
+	);
 }
 
 Utils::executeTasks(\@tasks);
