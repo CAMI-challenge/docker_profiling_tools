@@ -28,19 +28,18 @@ RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
 RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
 
-#add my Perl scripts
-ADD Utils.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
 
-#download Perl YAML parser directly from CPAN site, since cpan does not easily work with proxies
-RUN mkdir -p ${PREFIX}/lib/YAML/
-RUN wget -q -O ${PREFIX}/lib/YAML/Tiny.pm http://cpansearch.perl.org/src/ETHER/YAML-Tiny-1.69/lib/YAML/Tiny.pm
 
 #download the NCBI taxonomy from NCBI's FTP server
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
 RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+
+#add my Perl scripts
+ADD Utils.pm ${PREFIX}/lib/
+ADD YAML.pm ${PREFIX}/lib/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
 
 #metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
 ENV MAPPERNAME IDmapper
@@ -52,7 +51,6 @@ ADD ${TOOLNAME}/workdir/Assembly_result.xml ${TOOLNAME}/workdir/bioproject_resul
 RUN perl -I ${PREFIX}/lib/ ${PREFIX}/bin/${MAPPERNAME}.pl ${PREFIX}/src/${TOOLNAME}/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 
 #should the previous command be successful, temporary files in workdir/Downloads can be deleted
 RUN rm -rf ${PREFIX}/share/${MAPPERNAME}/workdir
-
 
 ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]

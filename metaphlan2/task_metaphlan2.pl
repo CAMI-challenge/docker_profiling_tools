@@ -10,16 +10,12 @@ use Utils;
 
 my @tasks = @{Utils::collectYAMLtasks()};
 foreach my $task (@tasks) {
-	$task->{commands} = [];
-	
 	my $id = $task->{inputfile};
 	$id =~ s/ /_/g;
 	$id =~ s|/|_|g;
 	
-	push @{$task->{commands}}, "rm -rf ".$task->{cacheDir}."/run/";
-	push @{$task->{commands}}, "mkdir -p ".$task->{cacheDir}."/run/";
-	push @{$task->{commands}}, "cd ".$task->{cacheDir}."/run/";
-	push @{$task->{commands}}, 
+	push @{$task->{commands}}, (
+		
 		$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/metaphlan2.py ".
 		"--mpa_pkl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200.pkl ".
 		"--input_type fastq ".
@@ -27,8 +23,10 @@ foreach my $task (@tasks) {
 		"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
 		"--bowtie2out ".$task->{cacheDir}."/run/".$id.".bowtie2 ".
 		"--sample_id_key '".$id."' ".
-		"--output_file ".$task->{resultfilename}.".orig \"".$task->{inputfile}."\"";
-	push @{$task->{commands}}, "perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile";	
+		"--output_file ".$task->{resultfilename}.".orig \"".$task->{inputfile}."\"",
+		
+		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile";
+	);
 }
 
 Utils::executeTasks(\@tasks);
