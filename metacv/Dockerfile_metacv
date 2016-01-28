@@ -14,31 +14,13 @@ ENV PACKAGES wget g++ gcc make seqtk patch git ca-certificates
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
-
-
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
-#directory for in and output with the host system
-ENV IO /exchange/
-
-
 #create prefix directory and src subdirectory
-RUN mkdir -p ${PREFIX}/bin/
-RUN mkdir -p ${PREFIX}/src/
-
-RUN mkdir -p ${IO}/input/
-RUN mkdir -p ${IO}/output/
-
-ENV MAPPERNAME IDmapper
-ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/src/${MAPPERNAME}/convert.pl
-
-ADD inputlist_reads_interleaved.txt ${IO}/
-
+RUN mkdir -p ${PREFIX}/src/ ${PREFIX}/bin/ ${PREFIX}/lib/ ${PREFIX}/share/ 
 ENV PATH=${PREFIX}/bin:${PATH}
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
-ENV CONT_PROFILING_FILES ${IO}/output/
+
+
 
 RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.tgz http://downloads.sourceforge.net/project/metacv/metacv_2_3_0.tgz
 RUN tar xzvf ${PREFIX}/src/${TOOLNAME}.tgz -C ${PREFIX}/src/
@@ -46,14 +28,6 @@ RUN mv ${PREFIX}/src/metacv_* ${PREFIX}/src/${TOOLNAME}/
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.tgz
 RUN cd ${PREFIX}/src/${TOOLNAME}/ && make
 RUN mv ${PREFIX}/src/${TOOLNAME}/metacv ${PREFIX}/bin/
-
-#download the NCBI taxonomy from NCBI's FTP server
-RUN mkdir -p ${PREFIX}/share/taxonomy/
-RUN wget -q -O ${PREFIX}/share/taxonomy/taxdump.tar.gz ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz
-RUN tar xzvf ${PREFIX}/share/taxonomy/taxdump.tar.gz -C ${PREFIX}/share/taxonomy/
-RUN rm -f ${PREFIX}/share/taxonomy/taxdump.tar.gz
-#note the download date of the NCBI taxonomy
-RUN date +"%Y.%m.%d" > ${PREFIX}/share/taxonomy/taxdump.tar.gz.date
 
 RUN mkdir -p ${PREFIX}/share/metacv_database/
 RUN wget -q -O ${PREFIX}/share/metacv_database/db.part00 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part00
@@ -67,13 +41,18 @@ RUN wget -q -O ${PREFIX}/share/metacv_database/db.part07 http://downloads.source
 RUN cd ${PREFIX}/share/metacv_database/ && cat db.part* | tar xvfzp -
 RUN rm -f ${PREFIX}/share/metacv_database/db.part*
 
-#~ RUN git config --global url."https://".insteadOf git://
-#~ RUN git clone https://gist.github.com/3521724.git ${PREFIX}/src/deinterleave
-#~ RUN mv ${PREFIX}/src/deinterleave/deinterleave_fastq.sh ${PREFIX}/bin/deinterleave_fastq.sh
-ADD ${TOOLNAME}/deinterleave.pl ${PREFIX}/bin/deinterleave.pl
-RUN chmod a+x ${PREFIX}/bin/deinterleave.pl
 
+#download the NCBI taxonomy from NCBI's FTP server
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+
+#add my Perl scripts
+ADD Utils.pm ${PREFIX}/lib/
+ADD YAML.pm ${PREFIX}/lib/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl
+ADD ${TOOLNAME}/deinterleave.pl ${PREFIX}/bin/deinterleave.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl ${PREFIX}/bin/deinterleave.pl
 
+ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
