@@ -3,8 +3,8 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV TOOLNAME focus
 
 #needed if on Michaels cluster
-ENV http_proxy http://172.16.20.249:3128
-ENV https_proxy http://172.16.20.249:3128
+#~ ENV http_proxy http://172.16.20.249:3128
+#~ ENV https_proxy http://172.16.20.249:3128
 
 #update underlying linux system
 RUN apt-get update -y
@@ -31,13 +31,15 @@ ADD ${TOOLNAME}/focus_cami.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus_cami.py < ${PREFIX}/src/${TOOLNAME}/focus_cami.py.patch
 
 
+#download the NCBI taxonomy from NCBI's FTP server
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
 
 #add my Perl scripts
 ADD Utils.pm ${PREFIX}/lib/
 ADD YAML.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl
 
 ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
