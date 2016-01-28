@@ -3,8 +3,8 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV TOOLNAME amphora2
 
 #needed if on Michaels cluster
-ENV http_proxy http://172.16.20.249:3128
-ENV https_proxy http://172.16.20.249:3128
+#~ ENV http_proxy http://172.16.20.249:3128
+#~ ENV https_proxy http://172.16.20.249:3128
 
 #update underlying linux system
 RUN apt-get update -y
