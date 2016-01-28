@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use YAML::Tiny;
+#~ use YAML::Tiny;
+use YAML;
 
 package Utils;
 
@@ -368,17 +369,17 @@ sub collectYAMLtasks {
 	$yamlfile = $ENV{YAML} if (not defined $yamlfile);
 		
 	die "yaml files '$yamlfile' does not exist.\n" if (not -e $yamlfile);
-	my $yaml = YAML::Tiny->read($yamlfile);
+	my $yaml = YAML::parseYAML($yamlfile);
 	my @tasks = ();
 	
 	my $cache = "/tmp";
-	$cache = $yaml->[0]->{arguments}->{cache} if (defined $yaml->[0]->{arguments}->{cache} && -d $yaml->[0]->{arguments}->{cache});
+	$cache = $yaml->[0]->{arguments}->{'#children'}->[0]->{cache}->{'#value'} if ($yaml->[0]->{arguments}->{'#children'}->[0]->{cache}->{'#value'} ne '');
 	$cache = absFilename($cache);
 	die "cache '$cache' is not a writable directory.\n" if ((not -d $cache) || (not -w $cache));
 
 	my $taxDir = "/";
 	$taxDir = $ENV{PREFIX}."/share/taxonomy/" if (defined $ENV{PREFIX});
-	$taxDir = $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path} if (defined $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path} && -d $yaml->[0]->{arguments}->{databases}->{taxonomy}->{path});	
+	$taxDir = $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} if ($yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} ne '' && -d $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'});
 	my @missingTaxFiles = ();
 	push @missingTaxFiles, "nodes.dmp" if (not -e $taxDir."/nodes.dmp");
 	push @missingTaxFiles, "names.dmp" if (not -e $taxDir."/names.dmp");
@@ -386,15 +387,16 @@ sub collectYAMLtasks {
 	die "cannot find file(s) '".join("', '", @missingTaxFiles)."' in taxonomy directory '".$taxDir."'.\n" if (@missingTaxFiles > 0);
 	
 	my $taskID = 0;
-	foreach my $listing (@{$yaml->[0]->{arguments}->{reads}}) {
+	foreach my $listing (@{$yaml->[0]->{arguments}->{'#children'}->[0]->{reads}->{'#children'}}) {
 		$taskID++;
-		my $basename = qx(basename $listing->{path}); chomp $basename;
-		if (not -e $listing->{path}) {
-			print STDERR "cannot read input file '".$listing->{path}."'.\n";
+		my $basename = $listing->{path}->{'#value'};
+		$basename = qx(basename $basename); chomp $basename;
+		if (not -e $listing->{path}->{'#value'}) {
+			print STDERR "cannot read input file '".$listing->{path}->{'#value'}."'.\n";
 		} else {
 			if (-d $resDir && -w $resDir) {
 				push @tasks, {
-					inputfile => $listing->{path}, 
+					inputfile => $listing->{path}->{'#value'}, 
 					resultfilename => $resDir."/result_".$taskID."__".$basename,
 					cacheDir => $cache,
 					taxonomyDir => $taxDir,

@@ -33,19 +33,16 @@ RUN patch ${PREFIX}/src/${TOOLNAME}/runMetaphyler.pl < ${PREFIX}/src/${TOOLNAME}
 
 
 
+#download the NCBI taxonomy from NCBI's FTP server
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+
 #add my Perl scripts
 ADD Utils.pm ${PREFIX}/lib/
+ADD YAML.pm ${PREFIX}/lib/
 ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
-
-#download Perl YAML parser directly from CPAN site, since cpan does not easily work with proxies
-RUN mkdir -p ${PREFIX}/lib/YAML/
-RUN wget -q -O ${PREFIX}/lib/YAML/Tiny.pm http://cpansearch.perl.org/src/ETHER/YAML-Tiny-1.69/lib/YAML/Tiny.pm
-
-#download the NCBI taxonomy from NCBI's FTP server
-RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
 
 ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
