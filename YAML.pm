@@ -20,6 +20,9 @@ sub parseYAML {
 		my @doc = ();
 		while (my $line = <IN>) {
 			chomp $line;
+			
+			$line = removeComment($line);
+			
 			if (($line =~ m/^---/) || ($line =~ m/^\.\.\./)) {
 				if (@doc > 0) {
 					my @h = @doc;
@@ -43,6 +46,30 @@ sub parseYAML {
 	}
 	
 	return \@documents;
+}
+
+sub removeComment {
+	my ($line) = @_;
+	
+	my %quotes = ();
+	my $resultLine = "";
+	for (my $i = 0; $i < length($line); $i++) {
+		my $char = substr($line, $i, 1);
+		if ($char eq '"' || $char eq "'" || $char eq '`') {
+			if (not exists $quotes{$char}) {
+				$quotes{$char} = 'open';
+			} else {
+				delete $quotes{$char};
+			}
+		} elsif ($char eq '#') {
+			if (scalar(keys(%quotes)) == 0) {
+				return $resultLine;
+			}
+		}
+		$resultLine .= $char;
+	}
+	
+	return $resultLine;
 }
 
 sub parseDocument {
@@ -69,12 +96,12 @@ sub parseDocument {
 			}
 		} elsif ((length($line_indent) < $indent) || ($line_indent =~ m/\-/)) {
 			print STDERR "pull: $line\n" if ($verbose);
-		
+
 			for (my $i = @stack-1; $i >= 1; $i--) {
 				if ($stack[$i]->{'#indent'} > length($line_indent)) {
 					$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'} = [] if (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'});
 					my $index = @{$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}};
-					$index-- if (($index > 0) && (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index-1]->{$key}));
+					$index-- if (($index > 0) && (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index-1]->{$stack[$i]->{'#lastKey'}}));
 					foreach my $key (keys(%{$stack[$i]})) {
 						next if ($key =~ m/^#/);
 						$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index]->{$key} = $stack[$i]->{$key};
