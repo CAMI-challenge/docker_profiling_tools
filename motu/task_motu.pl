@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use lib "../";
-use lib "/biobox/src/IDmapper/";
+use lib "/biobox/lib/";
 
 use strict;
 use warnings;
