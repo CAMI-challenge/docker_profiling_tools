@@ -41,15 +41,11 @@ RUN make -C ${PREFIX}/src/dna-utils/
 RUN cp ${PREFIX}/src/dna-utils/kmer_total_count ${PREFIX}/src/dna-utils/kmer_counts_per_sequence ${PREFIX}/src/dna-utils/kmer_continuous_count ${PREFIX}/bin/
 
 
-#download the NCBI taxonomy from NCBI's FTP server
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
-RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
-
 #add my Perl scripts
 ADD Utils.pm ${PREFIX}/lib/
 ADD YAML.pm ${PREFIX}/lib/
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl
 
 ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]

@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Utils;
 
-my @tasks = @{Utils::collectYAMLtasks()};
+my @tasks = @{Utils::collectYAMLtasks(undef, "skipTaxonomyCheck")};
 foreach my $task (@tasks) {
 	push @{$task->{commands}}, (
 

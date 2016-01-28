@@ -365,7 +365,7 @@ sub collectTasks {
 sub collectYAMLtasks {
 	my $resDir = "/bbx/mnt/output/";
 	
-	my ($yamlfile) = @_;
+	my ($yamlfile, $omitTaxonomyCheck) = @_;
 	$yamlfile = $ENV{YAML} if (not defined $yamlfile);
 		
 	die "yaml files '$yamlfile' does not exist.\n" if (not -e $yamlfile);
@@ -391,7 +391,7 @@ sub collectYAMLtasks {
 	push @missingTaxFiles, "nodes.dmp" if (not -e $taxDir."/nodes.dmp");
 	push @missingTaxFiles, "names.dmp" if (not -e $taxDir."/names.dmp");
 	push @missingTaxFiles, "merged.dmp" if (not -e $taxDir."/merged.dmp");
-	die "cannot find file(s) '".join("', '", @missingTaxFiles)."' in taxonomy directory '".$taxDir."'.\n" if (@missingTaxFiles > 0);
+	die "cannot find file(s) '".join("', '", @missingTaxFiles)."' in taxonomy directory '".$taxDir."'.\n" if ((@missingTaxFiles > 0) && (not $omitTaxonomyCheck));
 	
 	my $taskID = 0;
 	foreach my $listing (@{$yaml->[0]->{arguments}->{'#children'}->[0]->{reads}->{'#children'}}) {
