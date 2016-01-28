@@ -11,6 +11,7 @@ use Utils;
 my @tasks = @{Utils::collectYAMLtasks()};
 foreach my $task (@tasks) {
 	push @{$task->{commands}}, (
+	
 		"/src/".$ENV{TOOLNAME}."/phylosift all ".
 		"--disable_updates ".
 		"--simple ".
@@ -24,6 +25,7 @@ foreach my $task (@tasks) {
 		$task->{inputfile},
 		"cp \$tmpdir/taxasummary.txt ".$task->{resultfilename}.".orig",
 		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
+	);
 }
 
 Utils::executeTasks(\@tasks);
