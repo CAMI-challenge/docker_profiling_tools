@@ -25,7 +25,7 @@ foreach my $task (@tasks) {
 		"--sample_id_key '".$id."' ".
 		"--output_file ".$task->{resultfilename}.".orig \"".$task->{inputfile}."\"",
 		
-		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile";
+		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$ENV{PREFIX}."/share/".$ENV{MAPPERNAME}."/mappingresults.txt ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
 	);
 }
 
