@@ -15,7 +15,7 @@ foreach my $task (@tasks) {
 		"perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerScanner.pl -DNA <(gunzip -c ".$task->{inputfile}.")",
 		"perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/MarkerAlignTrim.pl -WithReference -OutputFormat phylip",
 		"perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Scripts/Phylotyping.pl -CPUs `nproc` > ".$task->{resultfilename}.".orig",
-		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Taxonomy/ \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
+		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
 			
 	);
 }
