@@ -379,8 +379,12 @@ sub collectYAMLtasks {
 
 	my $taxDir = "/";
 	$taxDir = $ENV{PREFIX}."/share/taxonomy/" if (defined $ENV{PREFIX});
-	if ((defined $ENV{TOOLNAME}) && ($ENV{TOOLNAME} eq 'amphora2')) {
-		$taxDir = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Taxonomy/" if (defined $ENV{PREFIX});
+	if ((defined $ENV{TOOLNAME}) && (defined $ENV{PREFIX})) {
+		if ($ENV{TOOLNAME} eq 'amphora2') {
+			$taxDir = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Taxonomy/";
+		} elsif ($ENV{TOOLNAME} eq 'phylosift') {
+			$taxDir = $ENV{HOME}"./share/phylosift/";
+		}
 	}
 	$taxDir = $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} if ($yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} ne '' && -d $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'});
 	my @missingTaxFiles = ();
