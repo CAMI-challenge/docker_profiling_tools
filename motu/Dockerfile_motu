@@ -25,6 +25,7 @@ ENV PATH=${PREFIX}/bin:${PATH}
 #download the latest version of mOTU
 RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.tar.gz http://www.bork.embl.de/software/mOTU/share/mOTUs.Linux64bits.tar.gz
 #extract downloaded archive
+RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
 RUN tar xzvf ${PREFIX}/src/${TOOLNAME}.tar.gz -C ${PREFIX}/src/${TOOLNAME}/
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.tar.gz
 

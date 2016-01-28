@@ -8,7 +8,7 @@ use warnings;
 use Data::Dumper;
 use Utils;
 
-my @tasks = @{Utils::collectTasks()};
+my @tasks = @{Utils::collectYAMLtasks()};
 foreach my $task (@tasks) {
 	push @{$task->{commands}}, (
 	
