@@ -2,9 +2,10 @@
 
 use strict;
 use warnings;
-use Data::Dumper;
 
 package YAML;
+
+use Data::Dumper;
 
 my $verbose = 0;
 #~ my ($inputfile) = @ARGV;
@@ -73,6 +74,7 @@ sub parseDocument {
 				if ($stack[$i]->{'#indent'} > length($line_indent)) {
 					$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'} = [] if (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'});
 					my $index = @{$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}};
+					$index-- if (($index > 0) && (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index-1]->{$key}));
 					foreach my $key (keys(%{$stack[$i]})) {
 						next if ($key =~ m/^#/);
 						$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index]->{$key} = $stack[$i]->{$key};
@@ -81,6 +83,7 @@ sub parseDocument {
 				} elsif ($stack[$i]->{'#indent'} == length($line_indent)) {
 					$stack[$#stack-1]->{$stack[$#stack-1]->{'#lastKey'}}->{'#children'} = [] if (not exists $stack[$#stack-1]->{$stack[$#stack-1]->{'#lastKey'}}->{'#children'});
 					my $index = @{$stack[$#stack-1]->{$stack[$#stack-1]->{'#lastKey'}}->{'#children'}};
+					$index-- if (($index > 0) && (not exists $stack[$#stack-1]->{$stack[$#stack-1]->{'#lastKey'}}->{'#children'}->[$index-1]->{$key}));
 					foreach my $key (keys(%{$stack[$#stack]})) {
 						next if ($key =~ m/^#/);
 						$stack[$#stack-1]->{$stack[$#stack-1]->{'#lastKey'}}->{'#children'}->[$index]->{$key} = $stack[$#stack]->{$key};
@@ -118,6 +121,7 @@ sub parseDocument {
 		for (my $i = @stack-1; $i >= 1; $i--) {
 			$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'} = [] if (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'});
 			my $index = @{$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}};
+			$index-- if (($index > 0) && (not exists $stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index-1]->{$stack[$i]->{'#lastKey'}}));
 			foreach my $key (keys(%{$stack[$i]})) {
 				next if ($key =~ m/^#/);
 				$stack[$i-1]->{$stack[$i-1]->{'#lastKey'}}->{'#children'}->[$index]->{$key} = $stack[$i]->{$key};
