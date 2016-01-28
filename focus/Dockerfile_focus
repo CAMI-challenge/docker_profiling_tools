@@ -10,44 +10,33 @@ ENV https_proxy http://172.16.20.249:3128
 RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget curl unzip seqtk
+ENV PACKAGES wget curl unzip seqtk make
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
-
 #directory where additional software shall be installed
 ENV PREFIX /biobox/
-#directory for in and output with the host system
-ENV IO /exchange/
-
-
 #create prefix directory and src subdirectory
-RUN mkdir -p ${PREFIX}/bin/
-RUN mkdir -p ${PREFIX}/src/${TOOLNAME}/
-RUN mkdir -p ${PREFIX}/share/
+RUN mkdir -p ${PREFIX}/src/ ${PREFIX}/bin/ ${PREFIX}/lib/ ${PREFIX}/share/ 
+ENV PATH=${PREFIX}/bin:${PATH}
 
-RUN mkdir -p ${IO}/input/
-RUN mkdir -p ${IO}/output/
 
+
+#update program to Stefans standards
 RUN mv /home/* ${PREFIX}/src/${TOOLNAME}/
-
-ENV MAPPERNAME IDmapper
-ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
-
 ADD ${TOOLNAME}/focus2result.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus2result.py < ${PREFIX}/src/${TOOLNAME}/focus2result.py.patch
 ADD ${TOOLNAME}/focus_cami.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus_cami.py < ${PREFIX}/src/${TOOLNAME}/focus_cami.py.patch
 
-ADD inputlist_reads_interleaved.txt ${IO}/
 
-ENV PATH=${PREFIX}/bin:${PATH}
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-#~ #ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
-ENV CONT_PROFILING_FILES ${IO}/output/
 
+#add my Perl scripts
+ADD Utils.pm ${PREFIX}/lib/
+ADD YAML.pm ${PREFIX}/lib/
+ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
 ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
 
-
+ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
