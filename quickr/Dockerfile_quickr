@@ -3,15 +3,23 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV TOOLNAME quickr
 
 #needed if on Michaels cluster
-ENV http_proxy http://172.16.20.249:3128
-ENV https_proxy http://172.16.20.249:3128
+#~ ENV http_proxy http://172.16.20.249:3128
+#~ ENV https_proxy http://172.16.20.249:3128
 
 # upgrade to latest debian packages 
 RUN apt-get -q update && apt-get upgrade -q -y -o DPkg::Options::=--force-confnew
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget g++ build-essential software-properties-common python-software-properties git julia hdf5-tools gzip hmmer patch
+ENV PACKAGES wget g++ build-essential software-properties-common python-software-properties git julia hdf5-tools gzip hmmer patch make
+#install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
+
+#directory where additional software shall be installed
+ENV PREFIX /biobox/
+#create prefix directory and src subdirectory
+RUN mkdir -p ${PREFIX}/src/ ${PREFIX}/bin/ ${PREFIX}/lib/ ${PREFIX}/share/ 
+ENV PATH=${PREFIX}/bin:${PATH}
+
 
 
 #install dependencies
@@ -23,42 +31,25 @@ RUN julia -e 'Pkg.add("HDF5"); Pkg.add("ArgParse");'
 # cleanup all temporary data 
 RUN rm -rf /tmp/* /var/tmp/*; test -d "$TMPDIR" && rm -rf "$TMPDIR"/* || set ?=0
 
-#directory where additional software shall be installed
-ENV PREFIX /biobox/
-#directory for in and output with the host system
-ENV IO /exchange/
-
-#create prefix directory and src subdirectory
-RUN mkdir -p ${PREFIX}/bin/
-RUN mkdir -p ${PREFIX}/share/
-RUN mkdir -p ${PREFIX}/src/
-
-RUN mkdir -p ${IO}/input/
-RUN mkdir -p ${IO}/output/
-
-ENV MAPPERNAME IDmapper
-ADD Utils.pm ${PREFIX}/src/${MAPPERNAME}/
-ADD inputlist_reads_interleaved.txt ${IO}/
-
-ENV PATH=${PREFIX}/bin:${PATH}
-ENV CONT_PAIRED_FASTQ_FILE_LISTING ${IO}/inputlist_reads_interleaved.txt
-#ENV CONT_CONTIGS_FILE_LISTING ${IO}/inputlist_contigs.txt
-ENV CONT_PROFILING_FILES ${IO}/output/
-
-
 RUN git clone https://github.com/dkoslicki/CAMIARKQuikr.git ${PREFIX}/share/
 RUN mv ${PREFIX}/share/data/* ${PREFIX}/share/
 RUN rm -rf ${PREFIX}/share/Docker ${PREFIX}/share/README.md ${PREFIX}/share/data ${PREFIX}/share/src
-#~ ADD ${TOOLNAME}/data/* ${PREFIX}/share/
-
 RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
 ADD ${TOOLNAME}/src/*.jl ${PREFIX}/src/${TOOLNAME}/
-
 RUN git clone http://github.com/EESI/dna-utils/ ${PREFIX}/src/dna-utils
 RUN make -C ${PREFIX}/src/dna-utils/
 RUN cp ${PREFIX}/src/dna-utils/kmer_total_count ${PREFIX}/src/dna-utils/kmer_counts_per_sequence ${PREFIX}/src/dna-utils/kmer_continuous_count ${PREFIX}/bin/
 
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl
 
+#download the NCBI taxonomy from NCBI's FTP server
+ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+
+#add my Perl scripts
+ADD Utils.pm ${PREFIX}/lib/
+ADD YAML.pm ${PREFIX}/lib/
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl
+
+ENV YAML "/bbx/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
