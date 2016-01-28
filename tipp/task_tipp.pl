@@ -15,7 +15,7 @@ foreach my $task (@tasks) {
 		"seqtk seq -a ".$task->{inputfile}." > input.fasta",
 		"run_abundance.py -f input.fasta -c /root/.sepp/tipp.config -o .",
 		"cp abundance.species.csv ".$task->{resultfilename}.".orig",
-		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/src/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
+		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
 		
 	);
 }
