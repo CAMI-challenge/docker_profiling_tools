@@ -14,7 +14,7 @@ foreach my $task (@tasks) {
 	
 		"perl ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/mOTUs.pl --processors=`nproc` ".$task->{inputfile},
 		"resfile=`find /tmp/ -name \"*insert.mm.dist.among.unique.scaled.taxaid.gz\"`",
-		"zcat \$resfile > ".$task->{resultfilename}.".orig",
+		"gunzip -c -d \$resfile > ".$task->{resultfilename}.".orig",
 		"perl -I ".$ENV{PREFIX}."/lib/ ".$ENV{PREFIX}."/bin/convert.pl ".$task->{resultfilename}.".orig ".$task->{taxonomyDir}." \"".$task->{inputfile}."\" > ".$task->{resultfilename}.".profile",
 	
 	);
