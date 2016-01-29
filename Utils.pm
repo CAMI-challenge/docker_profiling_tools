@@ -444,6 +444,11 @@ sub executeTasks {
 	my $yamlfile = $outputDirectory."/biobox.yaml";
 	my $exitStatus = system("touch $yamlfile");
 	die "cannot write to '".$yamlfile."' to report about results.\n" if ($exitStatus != 0);
+	open (YAML, "> ".$yamlfile) || die "cannot write reporting yaml file: '$yamlfile': $!\n";
+		print YAML "---\n";
+		print YAML "version: 1.0.0\n";
+		print YAML "arguments:\n";
+		print YAML "  profiling:\n";
 	
 	print scalar(@{$refList_tasks})." TASKS TO BE COMPUTED:\n";
 	for (my $i = 0; $i < @{$refList_tasks}; $i++) {
@@ -478,20 +483,11 @@ sub executeTasks {
 		my $endtime = time();
 		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
 		print "".('#' x 80)."\n\n";
+		print YAML "    - path: ".absFilename($task{resultfilename}.".profile")."\n";
+		print YAML "      format: bioboxes.org:/profling:0.9\n";
 	}
 	
-	#create YAML report about output files
-		my $YAML = "---\n";
-		$YAML .= "version: 1.0.0\n";
-		$YAML .= "arguments:\n";
-		$YAML .= "  profiling:\n";
-		for (my $i = 0; $i < @{$refList_tasks}; $i++) {
-			$YAML .= "    - path: ".absFilename($refList_tasks->[$i]->{resultfilename}.".profile")."\n";
-			$YAML .= "      format: bioboxes.org:/profling:0.9\n";
-		}
-		open (YAML, "> ".$yamlfile) || die "cannot write reporting yaml file: '$yamlfile': $!\n";
-			print YAML $YAML;
-		close (YAML);
+	close (YAML);
 }
 
 1;
