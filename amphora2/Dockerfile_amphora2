@@ -59,29 +59,31 @@ RUN cp ${PREFIX}/src/raxml/raxmlHPC* ${PREFIX}/bin/
 RUN cpanm -v LWP::Simple
 
 ##patch bioperl to operate with strange Newick trees
-ADD ${TOOLNAME}/bioperl_newick.patch ${PREFIX}/src/
+ADD bioperl_newick.patch ${PREFIX}/src/
 RUN patch /usr/share/perl5/Bio/TreeIO/NewickParser.pm < ${PREFIX}/src/bioperl_newick.patch
 
 
+ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
+RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
 RUN downloadTaxonomy.pl ${PREFIX}/src/${TOOLNAME}/Taxonomy/
 #replace amphoras version of the NCBI taxonomy with a more current one
-ADD ${TOOLNAME}/contig.taxonid.patch ${PREFIX}/src/${TOOLNAME}/Taxonomy/
+ADD contig.taxonid.patch ${PREFIX}/src/${TOOLNAME}/Taxonomy/
 RUN patch ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid < ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid.patch
 
 #add my Perl scripts
-ADD Utils.pm ${PREFIX}/lib/
-ADD YAML.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/checkTaxids.pl ${PREFIX}/bin/checkTaxids.pl
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl ${PREFIX}/bin/checkTaxids.pl
+RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
+RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+ADD checkTaxids.pl ${PREFIX}/bin/checkTaxids.pl
+ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl ${PREFIX}/bin/checkTaxids.pl
 
 #check if all taxonIDs in contig.taxonid are still in the updated taxonomy
 RUN perl -I ${PREFIX}/lib/ ${PREFIX}/bin/checkTaxids.pl ${PREFIX}/src/${TOOLNAME}/Taxonomy/contig.taxonid ${PREFIX}/src/${TOOLNAME}/Taxonomy/
 #fix amphora2 such that it reports NCBI taxonomy IDs instead of scientific names
-ADD ${TOOLNAME}/Phylotyping.pl.patch ${PREFIX}/src/${TOOLNAME}/Scripts/
+ADD Phylotyping.pl.patch ${PREFIX}/src/${TOOLNAME}/Scripts/
 RUN patch ${PREFIX}/src/${TOOLNAME}/Scripts/Phylotyping.pl < ${PREFIX}/src/${TOOLNAME}/Scripts/Phylotyping.pl.patch
 
 ENV AMPHORA2_home ${PREFIX}/src/${TOOLNAME}

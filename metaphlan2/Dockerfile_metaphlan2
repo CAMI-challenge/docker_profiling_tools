@@ -47,22 +47,24 @@ RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
 
 
 
+ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
+RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
 RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
 
 #add my Perl scripts
-ADD Utils.pm ${PREFIX}/lib/
-ADD YAML.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl 
+RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
+RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl 
 
 #metaphlan uses the GreenGenes taxonomy, while CAMI uses NCBI taxonomy. We thus need to find a mapping from GreenGenes to NCBI. I do this in a two step fashion: first, all used genomes (found in the "species2genomes.txt" file) are resolved to their according NCBI taxid with a Perl programm that must be run once. Second, every output of metaphlan must be converted via a second Perl script, which uses the mapping results from stage one.
 ENV MAPPERNAME IDmapper
 ENV MAPPERRESULT ${PREFIX}/share/${MAPPERNAME}/mappingresults.txt
-ADD ${TOOLNAME}/buildIDlists.pl ${PREFIX}/bin/${MAPPERNAME}.pl
-ADD ${TOOLNAME}/workdir/Assembly_result.xml ${TOOLNAME}/workdir/bioproject_result.xml ${TOOLNAME}/workdir/manual.txt ${PREFIX}/share/${MAPPERNAME}/workdir/
+ADD buildIDlists.pl ${PREFIX}/bin/${MAPPERNAME}.pl
+ADD workdir/Assembly_result.xml ${TOOLNAME}/workdir/bioproject_result.xml ${TOOLNAME}/workdir/manual.txt ${PREFIX}/share/${MAPPERNAME}/workdir/
 #run the one time mapping from "species2genomes.txt" into NCBI taxids and store the result in $MAPPERRESULT
 #since the NCBI taxonomy is not static, it might happen that some taxids are no longer used, i.e. the following program crashes. Try to manually update the XML files via the NCBI batch entrez system.
 RUN perl -I ${PREFIX}/lib/ ${PREFIX}/bin/${MAPPERNAME}.pl ${PREFIX}/src/${TOOLNAME}/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 

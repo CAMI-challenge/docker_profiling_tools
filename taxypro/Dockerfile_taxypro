@@ -40,15 +40,16 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 
 
 #create prefix directory and src subdirectory
-ADD ${TOOLNAME}/octave.script ${PREFIX}/src/${TOOLNAME}/
+ADD octave.script ${PREFIX}/src/${TOOLNAME}/
 RUN chmod a+x ${PREFIX}/src/${TOOLNAME}/octave.script
-ADD ${TOOLNAME}/TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
+ADD TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch /home/Tool/Taxy-Pro/TaxyProMain.m < ${PREFIX}/src/${TOOLNAME}/TaxyProMain.m.patch
 
+ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #add my Perl scripts
-ADD Utils.pm ${PREFIX}/lib/
-ADD YAML.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
+RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl
 
 ENV YAML "/bbx/mnt/input/biobox.yaml"

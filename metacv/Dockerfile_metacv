@@ -59,17 +59,19 @@ RUN cd ${PREFIX}/share/metacv_database/ && cat db.part* | tar xvfzp -
 RUN rm -f ${PREFIX}/share/metacv_database/db.part*
 
 
+ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
-ADD downloadTaxonomy.pl ${PREFIX}/bin/
+RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
+RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
 RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
 
 #add my Perl scripts
-ADD Utils.pm ${PREFIX}/lib/
-ADD YAML.pm ${PREFIX}/lib/
-ADD ${TOOLNAME}/convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-ADD ${TOOLNAME}/deinterleave.pl ${PREFIX}/bin/deinterleave.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/downloadTaxonomy.pl ${PREFIX}/bin/convert.pl ${PREFIX}/bin/deinterleave.pl
+RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
+RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+ADD deinterleave.pl ${PREFIX}/bin/deinterleave.pl
+RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl ${PREFIX}/bin/deinterleave.pl
 
 ENV YAML "/bbx/mnt/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
