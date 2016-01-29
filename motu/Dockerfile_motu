@@ -10,7 +10,7 @@ ENV TOOLNAME motu
 RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget curl bc make xz-utils
+ENV PACKAGES wget curl bc make xz-utils ca-certificates
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
@@ -33,33 +33,33 @@ RUN wget \
     | tar xJf - \
       --directory ${VALIDATOR} \
       --strip-components=1
-ENV PATH ${PATH}:${VALIDATOR}
-#download yaml schema
-RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
+#~ ENV PATH ${PATH}:${VALIDATOR}
+#~ #download yaml schema
+#~ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
 
 
 
-#download the latest version of mOTU
-RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.tar.gz http://www.bork.embl.de/software/mOTU/share/mOTUs.Linux64bits.tar.gz
-#extract downloaded archive
-RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
-RUN tar xzvf ${PREFIX}/src/${TOOLNAME}.tar.gz -C ${PREFIX}/src/${TOOLNAME}/
-RUN rm -f ${PREFIX}/src/${TOOLNAME}.tar.gz
+#~ #download the latest version of mOTU
+#~ RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.tar.gz http://www.bork.embl.de/software/mOTU/share/mOTUs.Linux64bits.tar.gz
+#~ #extract downloaded archive
+#~ RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
+#~ RUN tar xzvf ${PREFIX}/src/${TOOLNAME}.tar.gz -C ${PREFIX}/src/${TOOLNAME}/
+#~ RUN rm -f ${PREFIX}/src/${TOOLNAME}.tar.gz
 
 
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
-#download the NCBI taxonomy from NCBI's FTP server
-RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
-RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
-RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
+#~ ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+#~ #download the NCBI taxonomy from NCBI's FTP server
+#~ RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
+#~ RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
+#~ RUN downloadTaxonomy.pl ${PREFIX}/share/taxonomy/
 
-#add my Perl scripts
-RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
-RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
-ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
-ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
-RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl 
+#~ #add my Perl scripts
+#~ RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
+#~ RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+#~ ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
+#~ ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+#~ RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl 
 
-ENV YAML "/bbx/mnt/input/biobox.yaml"
-ENTRYPOINT ["task.pl"]
+#~ ENV YAML "/bbx/mnt/input/biobox.yaml"
+#~ ENTRYPOINT ["task.pl"]

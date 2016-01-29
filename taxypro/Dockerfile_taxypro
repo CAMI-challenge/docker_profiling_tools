@@ -10,7 +10,7 @@ ENV TOOLNAME taxypro
 
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES dpatch make xz-utils
+ENV PACKAGES dpatch make xz-utils ca-certificates
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 

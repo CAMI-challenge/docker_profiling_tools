@@ -10,7 +10,7 @@ ENV TOOLNAME metaphlan2
 RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES python-numpy python-biom-format bowtie2 libxml-xpath-perl wget unzip make xz-utils
+ENV PACKAGES python-numpy python-biom-format bowtie2 libxml-xpath-perl wget unzip make xz-utils ca-certificates
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
