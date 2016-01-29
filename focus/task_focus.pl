@@ -10,6 +10,8 @@ use Utils;
 
 my @tasks = @{Utils::collectYAMLtasks(undef, "skipTaxonomyCheck")};
 foreach my $task (@tasks) {
+	print STDERR "warning: taxonomy is hard coded in program, thus pointing to an alternative taxonomy directory will have no effect.\n" if ($task->{taxonomyDir} ne $ENV{PREFIX}.'/share/taxonomy/');
+	
 	push @{$task->{commands}}, (
 
 		"python ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/focus_cami.py -q <(seqtk seq -a ".$task->{inputfile}.") -m 0.001 -c bd -k 8  > ".$task->{resultfilename}.".orig",
