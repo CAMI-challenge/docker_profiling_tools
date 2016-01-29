@@ -367,8 +367,12 @@ sub collectYAMLtasks {
 	
 	my ($yamlfile, $omitTaxonomyCheck) = @_;
 	$yamlfile = $ENV{YAML} if (not defined $yamlfile);
-		
+	
 	die "yaml files '$yamlfile' does not exist.\n" if (not -e $yamlfile);
+	#validate YAML
+	my $statusCode = system("validate-biobox-file --input '$yamlfile' --schema '".$ENV{PREFIX}."/share/schema.yaml'");
+	die "input yaml file is invalid!\n" if ($statusCode != 0);
+	
 	my $yaml = YAML::parseYAML($yamlfile);
 	my @tasks = ();
 	
@@ -383,7 +387,7 @@ sub collectYAMLtasks {
 		if ($ENV{TOOLNAME} eq 'amphora2') {
 			$taxDir = $ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/Taxonomy/";
 		} elsif ($ENV{TOOLNAME} eq 'phylosift') {
-			$taxDir = $ENV{HOME}."/share/phylosift/";
+			$taxDir = $ENV{HOME}."/share/phylosift/ncbi/";
 		}
 	}
 	$taxDir = $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} if ($yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'} ne '' && -d $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{taxonomy}->{'#children'}->[0]->{path}->{'#value'});
