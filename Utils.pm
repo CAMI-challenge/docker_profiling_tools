@@ -364,6 +364,13 @@ sub collectTasks {
 
 sub collectYAMLtasks {
 	my $resDir = "/bbx/mnt/output/";
+	my $metaDir = "/bbx/metadata/";
+	#redirect STDERR and STDOUT if /bbx/metadata is a directory
+	if ((-d $metaDir) && (-w $metaDir)) {
+		open my $log_fh, '>>', $metaDir.'/log.txt';
+		*STDOUT = $log_fh;
+		*STDERR = $log_fh;
+	}
 	
 	my ($yamlfile, $omitTaxonomyCheck) = @_;
 	$yamlfile = $ENV{YAML} if (not defined $yamlfile);
