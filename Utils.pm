@@ -10,6 +10,7 @@ package Utils;
 our $TYPE_READ_SINGLE = 'single end reads';
 our $TYPE_READ_PAIRED = 'paired end reads';
 our $TYPE_CONTIGS = 'contigs';
+our $outputDirectory = "/bbx/mnt/output/";
 
 use Data::Dumper;
 our @RANKS = ('superkingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'strain');
@@ -363,7 +364,6 @@ sub collectTasks {
 }
 
 sub collectYAMLtasks {
-	my $resDir = "/bbx/mnt/output/";
 	my $metaDir = "/bbx/metadata/";
 	#redirect STDERR and STDOUT if /bbx/metadata is a directory
 	if ((-d $metaDir) && (-w $metaDir)) {
@@ -412,16 +412,16 @@ sub collectYAMLtasks {
 		if (not -e $listing->{path}->{'#value'}) {
 			print STDERR "cannot read input file '".$listing->{path}->{'#value'}."'.\n";
 		} else {
-			if (-d $resDir && -w $resDir) {
+			if (-d $outputDirectory && -w $outputDirectory) {
 				push @tasks, {
 					inputfile => $listing->{path}->{'#value'}, 
-					resultfilename => $resDir."/result_".$taskID."__".$basename,
+					resultfilename => $outputDirectory."/result_".$taskID."__".$basename,
 					cacheDir => $cache,
 					taxonomyDir => $taxDir,
 					commands => [],
 				};
 			} else {
-				die "result directory '".$resDir."' is not writable.\n";
+				die "result directory '".$outputDirectory."' is not writable.\n";
 			}
 		}
 	}
@@ -440,6 +440,10 @@ sub absFilename {
 
 sub executeTasks {
 	my ($refList_tasks) = @_;
+	
+	my $yamlfile = $outputDirectory."/biobox.yaml";
+	my $exitStatus = system("touch $yamlfile");
+	die "cannot write to '".$yamlfile."' to report about results.\n" if ($exitStatus != 0);
 	
 	print scalar(@{$refList_tasks})." TASKS TO BE COMPUTED:\n";
 	for (my $i = 0; $i < @{$refList_tasks}; $i++) {
@@ -475,6 +479,19 @@ sub executeTasks {
 		print "\nTASK NO. ".($i+1)." took ".($endtime-$starttime)." seconds to be executed (real time, not CPU time!)\n";
 		print "".('#' x 80)."\n\n";
 	}
+	
+	#create YAML report about output files
+		my $YAML = "---\n";
+		$YAML .= "version: 1.0.0\n";
+		$YAML .= "arguments:\n";
+		$YAML .= "  profiling:\n";
+		for (my $i = 0; $i < @{$refList_tasks}; $i++) {
+			$YAML .= "    - path: ".absFilename($refList_tasks->[$i]->{resultfilename}.".profile")."\n";
+			$YAML .= "      format: bioboxes.org:/profling:0.9\n";
+		}
+		open (YAML, "> ".$yamlfile) || die "cannot write reporting yaml file: '$yamlfile': $!\n";
+			print YAML $YAML;
+		close (YAML);
 }
 
 1;
