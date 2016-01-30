@@ -41,9 +41,9 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 
 #update program to Stefans standards
 RUN ln -s /home/ ${PREFIX}/src/${TOOLNAME}
-ADD ${TOOLNAME}/focus2result.py.patch ${PREFIX}/src/${TOOLNAME}/
+ADD focus2result.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus2result.py < ${PREFIX}/src/${TOOLNAME}/focus2result.py.patch
-ADD ${TOOLNAME}/focus_cami.py.patch ${PREFIX}/src/${TOOLNAME}/
+ADD focus_cami.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus_cami.py < ${PREFIX}/src/${TOOLNAME}/focus_cami.py.patch
 
 
