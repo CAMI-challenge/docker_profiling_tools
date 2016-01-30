@@ -42,7 +42,7 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 #install dependencies
 RUN add-apt-repository -y ppa:staticfloat/juliareleases
 RUN add-apt-repository -y ppa:staticfloat/julia-deps
-RUN git config --global url."https://".insteadOf git://
+#~ RUN git config --global url."https://".insteadOf git://
 RUN julia -e 'Pkg.add("HDF5"); Pkg.add("ArgParse");'
 
 # cleanup all temporary data 
