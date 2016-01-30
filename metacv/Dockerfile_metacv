@@ -46,15 +46,16 @@ RUN rm -f ${PREFIX}/src/${TOOLNAME}.tgz
 RUN cd ${PREFIX}/src/${TOOLNAME}/ && make
 RUN mv ${PREFIX}/src/${TOOLNAME}/metacv ${PREFIX}/bin/
 
+ENV DBURL http://www.techfak.uni-bielefeld.de/ags/pi/pages/metacv
 RUN mkdir -p ${PREFIX}/share/metacv_database/
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part00 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part00
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part01 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part01
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part02 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part02
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part03 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part03
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part04 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part04
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part05 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part05
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part06 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part06
-RUN wget -q -O ${PREFIX}/share/metacv_database/db.part07 http://downloads.sourceforge.net/project/metacv/cvdb_2059/db.part07
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part00 ${DBURL}/db.part00
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part01 ${DBURL}/db.part01
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part02 ${DBURL}/db.part02
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part03 ${DBURL}/db.part03
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part04 ${DBURL}/db.part04
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part05 ${DBURL}/db.part05
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part06 ${DBURL}/db.part06
+RUN wget -q -O ${PREFIX}/share/metacv_database/db.part07 ${DBURL}/db.part07
 RUN cd ${PREFIX}/share/metacv_database/ && cat db.part* | tar xvfzp -
 RUN rm -f ${PREFIX}/share/metacv_database/db.part*
 
