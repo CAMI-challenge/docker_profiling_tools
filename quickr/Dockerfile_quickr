@@ -48,9 +48,9 @@ RUN julia -e 'Pkg.add("HDF5"); Pkg.add("ArgParse");'
 # cleanup all temporary data 
 RUN rm -rf /tmp/* /var/tmp/*; test -d "$TMPDIR" && rm -rf "$TMPDIR"/* || set ?=0
 
-RUN git clone https://github.com/dkoslicki/CAMIARKQuikr.git ${PREFIX}/share/
-RUN mv ${PREFIX}/share/data/* ${PREFIX}/share/
-RUN rm -rf ${PREFIX}/share/Docker ${PREFIX}/share/README.md ${PREFIX}/share/data ${PREFIX}/share/src
+RUN git clone https://github.com/dkoslicki/CAMIARKQuikr.git ${PREFIX}/share/${TOOLNAME}
+RUN mv ${PREFIX}/share/${TOOLNAME}/data/* ${PREFIX}/share/
+RUN rm -rf ${PREFIX}/share/${TOOLNAME}
 RUN mkdir -p ${PREFIX}/src/${TOOLNAME}
 ADD src/*.jl ${PREFIX}/src/${TOOLNAME}/
 RUN git clone http://github.com/EESI/dna-utils/ ${PREFIX}/src/dna-utils
