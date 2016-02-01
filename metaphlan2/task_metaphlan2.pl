@@ -21,7 +21,7 @@ foreach my $task (@tasks) {
 		"--input_type fastq ".
 		"--nproc `nproc` ".
 		"--bowtie2db ".$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/db_v20/mpa_v20_m200 ".
-		"--bowtie2out ".$task->{cacheDir}."/run/".$id.".bowtie2 ".
+		"--bowtie2out \$tmpdir/out.bowtie2 ".
 		"--sample_id_key '".$id."' ".
 		"--output_file ".$task->{resultfilename}.".orig \"".$task->{inputfile}."\"",
 		
