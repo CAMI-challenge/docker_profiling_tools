@@ -12,7 +12,8 @@ my @tasks = @{Utils::collectYAMLtasks()};
 foreach my $task (@tasks) {
 	push @{$task->{commands}}, (
 	
-		"/src/".$ENV{TOOLNAME}."/phylosift all ".
+		"cd ",
+		$ENV{PREFIX}."/src/".$ENV{TOOLNAME}."/phylosift all ".
 		"--disable_updates ".
 		"--simple ".
 		"-f ".
