@@ -42,6 +42,11 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 ADD Classify.jl.patch ${PREFIX}/src/${TOOLNAME}/Classify.jl.patch
 RUN patch /usr/local/sbin/Classify.jl < ${PREFIX}/src/${TOOLNAME}/Classify.jl.patch
 
+RUN wget -q -O /exchange/db/CommonKmersData.tar.gz http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz
+RUN tar xzvf /exchange/db/CommonKmersData.tar.gz -C /exchange/db/
+RUN rm -f /exchange/db/CommonKmersData.tar.gz
+#~ RUN echo -e "\n \n NOTE: Be sure to download the training data at http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz and uncompress it. The resulting directory should be passed to docker at the proper location via: -v /path/to/uncompressed/Data:/exchange/db/:ro"
+
 ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
@@ -49,8 +54,5 @@ RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
 ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl
 
-RUN echo -e "\n \n NOTE: Be sure to download the training data at http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz and uncompress it. The resulting directory should be passed to docker at the proper location via: -v /path/to/uncompressed/Data:/exchange/db/:ro"
 ENV YAML "/bbx/mnt/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
-
-
