@@ -10,6 +10,8 @@ use Utils;
 
 my @tasks = @{Utils::collectYAMLtasks(undef, "skipTaxonomyCheck")};
 foreach my $task (@tasks) {
+	print STDERR "warning: taxonomy is hard coded in program, thus pointing to an alternative taxonomy directory will have no effect.\n" if ($task->{taxonomyDir} ne $ENV{PREFIX}.'/share/taxonomy/');
+	
 	push @{$task->{commands}}, (
 
 		"gunzip -c -d ".$task->{inputfile}." | sed -n \"1~4s/^@/>/p;2~4p\" > \$tmpdir/input.fa",
