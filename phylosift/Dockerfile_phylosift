@@ -55,7 +55,7 @@ ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/ma
 #replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
 RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
 RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl
-RUN downloadTaxonomy.pl ${HOME}/share/phylosift/ncbi/
+RUN downloadTaxonomy.pl ${HOME}/share/phylosift/ncbi/ extractMoreFiles
 
 #normally phylosift downloads its marker database when it is executed the first time. I want to have the download ready when building the container, thus it is done here manually
 RUN wget -q -O ${HOME}/share/phylosift/markers.tgz http://edhar.genomecenter.ucdavis.edu/~koadman/phylosift_markers/markers.tgz
