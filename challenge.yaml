@@ -15,10 +15,27 @@ arguments:
       path: /exchange/db/
       format: unknown
       #download from https://s3-eu-west-1.amazonaws.com/cami-public-databases/metacv.tar.gz
+      #the program is looking for files containing the prefix "cvk6_2059".
+        #Contents should look like
+        #   cvk6_2059.anno2inf
+        #   cvk6_2059.cnt
+        #   cvk6_2059.cor
+        #   cvk6_2059.gis
+        #   cvk6_2059.idmap
+        #   cvk6_2059.inf
+        #   cvk6_2059.ko2path
+        #   cvk6_2059.wit
     commonkmers:
       path: /exchange/db/
       format: unknown
       #download from https://s3-eu-west-1.amazonaws.com/cami-public-databases/commonKmersData.tar.gz
+        #Contents should look like
+        #   Bcalms
+        #   CommonKmerMatrix-30mers.h5
+        #   CommonKmerMatrix-50mers.h5
+        #   FileNames.txt
+        #   Info.txt
+        #   Taxonomy.txt
     taxypro:
       path: /home/DB/Pfam27/
       format: unknown
