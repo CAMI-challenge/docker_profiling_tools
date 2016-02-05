@@ -1,0 +1,27 @@
+version: 1.0.0
+arguments:
+  reads:
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/first1k.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/dummy_reads.fasta.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/RM2_S001_270_firstM.fq.gz
+  databases:
+    taxonomy:
+      path: ${PREFIX}/share/taxonomy/
+      format: bioboxes.org:/taxonomy_ncbi_dumps
+    metacv:
+      path: /exchange/db/
+      format: unknown
+      #download from https://s3-eu-west-1.amazonaws.com/cami-public-databases/metacv.tar.gz
+    commonkmers:
+      path: /exchange/db/
+      format: unknown
+      #download from https://s3-eu-west-1.amazonaws.com/cami-public-databases/commonKmersData.tar.gz
+    taxypro:
+      path: /home/DB/Pfam27/
+      format: unknown
+      #download from https://s3-eu-west-1.amazonaws.com/cami-public-databases/taxypro.tar.gz
+  cache: /cache
+
