@@ -46,8 +46,9 @@ RUN rm -f ${PREFIX}/src/${TOOLNAME}.tgz
 RUN cd ${PREFIX}/src/${TOOLNAME}/ && make
 RUN mv ${PREFIX}/src/${TOOLNAME}/metacv ${PREFIX}/bin/
 
-ENV DBURL http://www.techfak.uni-bielefeld.de/ags/pi/pages/metacv
-RUN mkdir -p ${PREFIX}/share/metacv_database/
+#from now on, the database should be provided by the host as a volume mount!
+#~ ENV DBURL http://www.techfak.uni-bielefeld.de/ags/pi/pages/metacv
+#~ RUN mkdir -p ${PREFIX}/share/metacv_database/
 #~ RUN wget -q -O ${PREFIX}/share/metacv_database/db.part00 ${DBURL}/db.part00
 #~ RUN wget -q -O ${PREFIX}/share/metacv_database/db.part01 ${DBURL}/db.part01
 #~ RUN wget -q -O ${PREFIX}/share/metacv_database/db.part02 ${DBURL}/db.part02
@@ -58,7 +59,7 @@ RUN mkdir -p ${PREFIX}/share/metacv_database/
 #~ RUN wget -q -O ${PREFIX}/share/metacv_database/db.part07 ${DBURL}/db.part07
 #~ RUN cd ${PREFIX}/share/metacv_database/ && cat db.part* | tar xvfzp -
 #~ RUN rm -f ${PREFIX}/share/metacv_database/db.part*
-RUN echo "please make sure, that you have downloaded and extracted metaCV's database. Current URL is ${DBURL}. Extract like 'cat db.part* | tar xvfzp -p"
+#~ RUN echo "please make sure, that you have downloaded and extracted metaCV's database. Current URL is ${DBURL}. Extract like 'cat db.part* | tar xvfzp -p"
 
 ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server

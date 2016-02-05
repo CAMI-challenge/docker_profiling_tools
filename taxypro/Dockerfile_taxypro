@@ -52,5 +52,8 @@ RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
 ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl
 
+#to save image space, the database is deleted from the image and must be provided by the host system as a mount
+RUN rm -rf /home/DB/Pfam27
+
 ENV YAML "/bbx/mnt/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
