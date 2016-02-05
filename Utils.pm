@@ -413,6 +413,12 @@ sub collectYAMLtasks {
 			print STDERR "cannot read input file '".$listing->{path}->{'#value'}."'.\n";
 		} else {
 			if (-d $outputDirectory && -w $outputDirectory) {
+				my $dbPath = undef;
+				if (exists $yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{$ENV{TOOLNAME}}) {
+					$dbPath = absFilename($yaml->[0]->{arguments}->{'#children'}->[0]->{databases}->{'#children'}->[0]->{$ENV{TOOLNAME}}->{'#children'}->[0]->{path}->{'#value'})."/";
+					$dbPath = undef if ($dbPath eq '');
+					die "I expect the '".$ENV{TOOLNAME}."' database to be mounted at '$dbPath', but I cannot find this directory.\n"  if (! -d $dbPath);
+				}
 				push @tasks, {
 					inputfile => $listing->{path}->{'#value'}, 
 					resultfilename => $outputDirectory."/result_".$taskID."__".$basename,
@@ -420,6 +426,7 @@ sub collectYAMLtasks {
 					taxonomyDir => $taxDir,
 					commands => [],
 				};
+				$tasks[$#tasks]->{databaseDir} = $dbPath if (defined $dbPath);
 			} else {
 				die "result directory '".$outputDirectory."' is not writable.\n";
 			}
