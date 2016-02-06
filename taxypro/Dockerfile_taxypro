@@ -3,8 +3,8 @@ MAINTAINER Stefan Janssen, stefan.m.janssen@gmail.com
 ENV TOOLNAME taxypro
 
 #needed if on Michaels cluster
-#~ ENV http_proxy http://172.16.20.249:3128
-#~ ENV https_proxy http://172.16.20.249:3128
+#ENV http_proxy http://172.16.20.249:3128
+#ENV https_proxy http://172.16.20.249:3128
 
 #update underlying linux system
 RUN apt-get update -y
@@ -37,19 +37,17 @@ ENV PATH ${PATH}:${VALIDATOR}
 #download yaml schema
 RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
 
-
-
 #create prefix directory and src subdirectory
-ADD octave.script ${PREFIX}/src/${TOOLNAME}/
+ADD ${TOOLNAME}/octave.script ${PREFIX}/src/${TOOLNAME}/
 RUN chmod a+x ${PREFIX}/src/${TOOLNAME}/octave.script
-ADD TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
+ADD ${TOOLNAME}/TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch /home/Tool/Taxy-Pro/TaxyProMain.m < ${PREFIX}/src/${TOOLNAME}/TaxyProMain.m.patch
 
 ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
-ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+ADD ${TOOLNAME}/task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl
 
 #to save image space, the database is deleted from the image and must be provided by the host system as a mount
@@ -57,3 +55,4 @@ RUN rm -rf /home/DB/Pfam27
 
 ENV YAML "/bbx/mnt/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
+
