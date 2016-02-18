@@ -2,11 +2,45 @@ version: 1.0.0
 arguments:
   reads:
     - format: bioboxes.org:/fastq
-      path: /exchange/input/first1k.fq.gz
+      path: /exchange/input/Low_toy/S_S001__genomes_30__insert_180_reads_anonymous.fq.gz
     - format: bioboxes.org:/fastq
-      path: /exchange/input/dummy_reads.fasta.gz
+      path: /exchange/input/Low/RL_S001__insert_270.fq.gz
     - format: bioboxes.org:/fastq
-      path: /exchange/input/RM2_S001_270_firstM.fq.gz
+      path: /exchange/input/Medium_toy/M1_S001__insert_5000_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium_toy/M1_S002__insert_5000_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium_toy/M2_S001__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium_toy/M2_S002__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium/RM1_S001__insert_5000.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium/RM1_S002__insert_5000.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium/RM2_S001__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/Medium/RM2_S002__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High_toy/H_S001__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High_toy/H_S002__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High_toy/H_S003__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High_toy/H_S004__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High_toy/H_S005__insert_180_reads_anonymous.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High/RH_S001__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High/RH_S002__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High/RH_S003__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High/RH_S004__insert_270.fq.gz
+    - format: bioboxes.org:/fastq
+      path: /exchange/input/High/RH_S005__insert_270.fq.gz
   databases:
     taxonomy:
       path: ${PREFIX}/share/taxonomy/
