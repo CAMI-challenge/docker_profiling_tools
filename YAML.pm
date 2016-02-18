@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-package YAML;
+package YAMLsj;
 
 use Data::Dumper;
 

@@ -66,7 +66,7 @@ RUN rm ${HOME}/share/phylosift/markers.tgz
 
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
-RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
+RUN wget -q -O ${PREFIX}/lib/YAMLsj.pm ${GITHUB}/YAMLsj.pm
 ADD convert_${TOOLNAME}.pl ${PREFIX}/bin/convert.pl
 ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 RUN chmod a+x ${PREFIX}/bin/task.pl ${PREFIX}/bin/convert.pl 

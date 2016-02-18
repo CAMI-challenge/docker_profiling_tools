@@ -2,8 +2,7 @@
 
 use strict;
 use warnings;
-#~ use YAML::Tiny;
-use YAML;
+use YAMLsj;
 
 package Utils;
 
@@ -380,7 +379,7 @@ sub collectYAMLtasks {
 	my $statusCode = system("validate-biobox-file --input '$yamlfile' --schema '".$ENV{PREFIX}."/share/schema.yaml'");
 	die "input yaml file is invalid!\n" if ($statusCode != 0);
 	
-	my $yaml = YAML::parseYAML($yamlfile);
+	my $yaml = YAMLsj::parseYAML($yamlfile);
 	my @tasks = ();
 	
 	my $cache = "/tmp";
