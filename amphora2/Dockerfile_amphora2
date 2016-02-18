@@ -63,7 +63,7 @@ ADD bioperl_newick.patch ${PREFIX}/src/
 RUN patch /usr/share/perl5/Bio/TreeIO/NewickParser.pm < ${PREFIX}/src/bioperl_newick.patch
 
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
 RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
 RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl

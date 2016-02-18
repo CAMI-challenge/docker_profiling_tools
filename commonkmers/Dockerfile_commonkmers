@@ -52,7 +52,7 @@ RUN patch /usr/local/sbin/Classify.jl < ${PREFIX}/src/${TOOLNAME}/Classify.jl.pa
 #~ RUN rm -f /exchange/db/CommonKmersData.tar.gz
 #~ RUN echo -e "\n \n NOTE: Be sure to download the training data at http://www.math.oregonstate.edu/~koslickd/CommonKmersData.tar.gz and uncompress it. The resulting directory should be passed to docker at the proper location via: -v /path/to/uncompressed/Data:/exchange/db/:ro"
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm

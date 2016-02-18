@@ -45,7 +45,7 @@ RUN chmod a+x ${PREFIX}/src/${TOOLNAME}/octave.script
 ADD TaxyProMain.m.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch /home/Tool/Taxy-Pro/TaxyProMain.m < ${PREFIX}/src/${TOOLNAME}/TaxyProMain.m.patch
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm

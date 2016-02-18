@@ -67,7 +67,7 @@ RUN sed -i "s/tax_name/tax_id/" /usr/local/lib/python2.7/dist-packages/sepp-3.0-
 
 
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
 RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
 RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl

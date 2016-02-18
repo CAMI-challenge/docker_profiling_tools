@@ -47,7 +47,7 @@ ADD focus_cami.py.patch ${PREFIX}/src/${TOOLNAME}/
 RUN patch ${PREFIX}/src/${TOOLNAME}/focus_cami.py < ${PREFIX}/src/${TOOLNAME}/focus_cami.py.patch
 
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm

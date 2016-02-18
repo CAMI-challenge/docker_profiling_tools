@@ -51,7 +51,7 @@ RUN echo '$cm_align_long_mxsize = "40000";' >> ${PREFIX}/src/${TOOLNAME}/phylosi
 RUN echo '$cm_align_short_mxsize = "40000";' >> ${PREFIX}/src/${TOOLNAME}/phylosiftrc;
 RUN rm ${PREFIX}/src/phylosift.tar.bz2
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #replace phylosifts own copy of the NCBI taxonomy with the latest one from NCBI's FTP server
 RUN wget -q -O ${PREFIX}/bin/downloadTaxonomy.pl ${GITHUB}/downloadTaxonomy.pl
 RUN chmod a+x ${PREFIX}/bin/downloadTaxonomy.pl

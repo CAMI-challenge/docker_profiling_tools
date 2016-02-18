@@ -58,7 +58,7 @@ RUN make -C ${PREFIX}/src/dna-utils/
 RUN cp ${PREFIX}/src/dna-utils/kmer_total_count ${PREFIX}/src/dna-utils/kmer_counts_per_sequence ${PREFIX}/src/dna-utils/kmer_continuous_count ${PREFIX}/bin/
 
 
-ENV GITHUB https://raw.githubusercontent.com/sjanssen2/docker_profiling_tools/master/
+ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #add my Perl scripts
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAML.pm ${GITHUB}/YAML.pm
