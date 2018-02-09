@@ -40,7 +40,7 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 
 
 #download the latest version of MetaPhlAn2
-RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://bitbucket.org/biobakery/metaphlan2/get/3d22a72b109b.zip
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://bitbucket.org/biobakery/metaphlan2/get/94840c29be6b.zip
 RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
 RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
@@ -65,6 +65,7 @@ ENV MAPPERNAME IDmapper
 ENV MAPPERRESULT ${PREFIX}/share/${MAPPERNAME}/mappingresults.txt
 ADD buildIDlists.pl ${PREFIX}/bin/${MAPPERNAME}.pl
 ADD workdir/Assembly_result.xml workdir/bioproject_result.xml workdir/manual.txt ${PREFIX}/share/${MAPPERNAME}/workdir/
+
 #run the one time mapping from "species2genomes.txt" into NCBI taxids and store the result in $MAPPERRESULT
 #since the NCBI taxonomy is not static, it might happen that some taxids are no longer used, i.e. the following program crashes. Try to manually update the XML files via the NCBI batch entrez system.
 RUN perl -I ${PREFIX}/lib/ ${PREFIX}/bin/${MAPPERNAME}.pl ${PREFIX}/src/${TOOLNAME}/utils/species2genomes.txt ${PREFIX}/share/${MAPPERNAME}/workdir > ${MAPPERRESULT} 

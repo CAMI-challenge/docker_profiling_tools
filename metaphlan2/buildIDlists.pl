@@ -156,11 +156,13 @@ sub findspeciesaccessions {
 		while (my $line = <IN>) {
 			my @parts = split(m/\n|\t/, $line);
 			$parts[0] =~ s/\..*?$//;
-			if (exists $ids{Assembly}->{$parts[0]}) {
-				$ids{Assembly}->{$parts[0]} = $parts[5];
-			}
-			if (exists $ids{bioproject}->{$parts[1]}) {
-				$ids{bioproject}->{$parts[1]} = $parts[5];
+			if ($#parts > 1) {
+				if (exists $ids{Assembly}->{$parts[0]}) {
+					$ids{Assembly}->{$parts[0]} = $parts[5];
+				}
+				if (exists $ids{bioproject}->{$parts[1]}) {
+					$ids{bioproject}->{$parts[1]} = $parts[5];
+				}
 			}
 		}
 	close (IN);
@@ -171,11 +173,13 @@ sub findspeciesaccessions {
 		while (my $line = <IN>) {
 			my @parts = split(m/\n|\t/, $line);
 			$parts[0] =~ s/\..*?$//;
-			if (exists $ids{Assembly}->{$parts[0]}) {
-				$ids{Assembly}->{$parts[0]} = $parts[5];
-			}
-			if (exists $ids{bioproject}->{$parts[1]}) {
-				$ids{bioproject}->{$parts[1]} = $parts[5];
+			if ($#parts > 1) {
+				if (exists $ids{Assembly}->{$parts[0]}) {
+					$ids{Assembly}->{$parts[0]} = $parts[5];
+				}
+				if (exists $ids{bioproject}->{$parts[1]}) {
+					$ids{bioproject}->{$parts[1]} = $parts[5];
+				}
 			}
 		}
 	close (IN);

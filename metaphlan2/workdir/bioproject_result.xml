@@ -5,23 +5,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Helicoverpa armigera nucleopolyhedrovirus G4</Name>
-            <Title>Helicoverpa armigera nucleopolyhedrovirus G4 RefSeq Genome</Title>
-            <Publication date="1997-01-01T00:00:00Z" id="9482587" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1999-11-24T00:00:00Z" id="10564750" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="2000-12-23T00:00:00Z" id="11125177" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="2001-02-24T00:00:00Z" id="11210934" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Title>Helicoverpa armigera nucleopolyhedrovirus G4 RefSeq Other</Title>
             <ProjectReleaseDate>2001-01-25T00:00:00Z</ProjectReleaseDate>
             <RefSeq representation="eReference">
                 <AnnotationSource>
@@ -51,7 +35,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -74,12 +58,8 @@
             <ArchiveID accession="PRJNA14148" archive="NCBI" id="14148"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Helicoverpa zea SNPV</Name>
-            <Title>Helicoverpa zea single nucleopolyhedrovirus RefSeq Genome</Title>
-            <Publication date="2002-02-14T00:00:00Z" id="11842262" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Name>Helicoverpa zea single nucleopolyhedrovirus</Name>
+            <Title>Helicoverpa zea single nucleopolyhedrovirus RefSeq Other</Title>
             <ProjectReleaseDate>2002-01-01T00:00:00Z</ProjectReleaseDate>
             <RefSeq representation="eReference">
                 <AnnotationSource>
@@ -109,7 +89,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -133,11 +113,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Stx2 converting phage I</Name>
-            <Title>Stx2 converting phage I RefSeq Genome</Title>
-            <Publication date="2003-05-03T00:00:00Z" id="12727356" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Title>Stx2 converting phage I RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -166,7 +142,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -183,90 +159,6 @@
     </Submission>
 </DocumentSummary>
 
-<DocumentSummary uid="14180">
-    <Project>
-        <ProjectID>
-            <ArchiveID accession="PRJNA14180" archive="NCBI" id="14180"/>
-        </ProjectID>
-        <ProjectDescr>
-            <Name>Subterranean clover stunt virus</Name>
-            <Title>Subterranean clover stunt virus RefSeq Genome</Title>
-            <Publication date="1995-03-10T00:00:00Z" id="7886939" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="2000-08-11T00:00:00Z" id="10936099" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <ProjectReleaseDate>2009-11-30T00:00:00Z</ProjectReleaseDate>
-            <RefSeq representation="eReference">
-                <AnnotationSource>
-                    <Name>NCBI annotation pipeline</Name>
-                </AnnotationSource>
-            </RefSeq>
-        </ProjectDescr>
-        <ProjectType>
-            <ProjectTypeSubmission>
-                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="36772" taxID="36772">
-                        <OrganismName>Subterranean clover stunt virus</OrganismName>
-                        <Supergroup>eViruses</Supergroup>
-                        <RepliconSet>
-                            <Replicon order="1">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-M</Name>
-                                <Size units="Mb">0.001001</Size>
-                            </Replicon>
-                            <Replicon order="3">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-C</Name>
-                                <Size units="Mb">0.000991</Size>
-                            </Replicon>
-                            <Replicon order="4">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-N</Name>
-                                <Size units="Mb">0.001002</Size>
-                            </Replicon>
-                            <Replicon order="5">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-S</Name>
-                                <Size units="Mb">0.000998</Size>
-                            </Replicon>
-                            <Replicon order="7">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-U1</Name>
-                                <Size units="Mb">0.000988</Size>
-                            </Replicon>
-                            <Replicon order="8">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name>DNA-R</Name>
-                                <Size units="Mb">0.001005</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">8</Count>
-                        </RepliconSet>
-                        <GenomeSize units="Kb">8.024000</GenomeSize>
-                    </Organism>
-                </Target>
-                <Method method_type="eOther"/>
-                <Objectives>
-                    <Data data_type="eAnnotation"/>
-                </Objectives>
-            </ProjectTypeSubmission>
-        </ProjectType>
-    </Project>
-    <Submission submitted="2005-07-27">
-        <Description>
-            <!-- Submitter information has been removed -->
-            <Organization role="owner" type="center">
-                <Name abbr="Katul L., Inst.Plant Virology, Microbiology and Biosafety, Federal Biol. Res. Centre for Agriculture and Forestry, Messeweg 11-12, 38104 Braunschweig, GERMANY">Katul L., Inst.Plant Virology, Microbiology and Biosafety, Federal Biol. Res. Centre for Agriculture and Forestry, Messeweg 11-12, 38104 Braunschweig, GERMANY</Name>
-                <!-- Contact information has been removed -->
-            </Organization>
-            <Access>public</Access>
-        </Description>
-    </Submission>
-</DocumentSummary>
-
 <DocumentSummary uid="14300">
     <Project>
         <ProjectID>
@@ -274,7 +166,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Tomato yellow leaf curl Thailand virus associated DNA 1</Name>
-            <Title>Tomato yellow leaf curl Thailand virus associated DNA 1 RefSeq Genome</Title>
+            <Title>Tomato yellow leaf curl Thailand virus associated DNA 1 RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -303,7 +195,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -327,7 +219,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Mycobacterium phage PG1</Name>
-            <Title>Mycobacterium phage PG1 RefSeq Genome</Title>
+            <Title>Mycobacterium phage PG1 RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -356,7 +248,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -380,11 +272,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Bordetella phage BMP-1</Name>
-            <Title>Bordetella phage BMP-1 RefSeq Genome</Title>
-            <Publication date="2004-02-20T00:00:00Z" id="14973019" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Title>Bordetella phage BMP-1 RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -413,7 +301,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -437,11 +325,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Bordetella phage BIP-1</Name>
-            <Title>Bordetella phage BIP-1 RefSeq Genome</Title>
-            <Publication date="2004-02-20T00:00:00Z" id="14973019" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Title>Bordetella phage BIP-1 RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -470,7 +354,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -494,11 +378,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Vibrio phage Vf12</Name>
-            <Title>Vibrio phage Vf12 RefSeq Genome</Title>
-            <Publication date="1998-09-28T00:00:00Z" id="9748441" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
+            <Title>Vibrio phage Vf12 RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -527,7 +407,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -544,135 +424,6 @@
     </Submission>
 </DocumentSummary>
 
-<DocumentSummary uid="14413">
-    <Project>
-        <ProjectID>
-            <ArchiveID accession="PRJNA14413" archive="NCBI" id="14413"/>
-        </ProjectID>
-        <ProjectDescr>
-            <Name>Human herpesvirus 4</Name>
-            <Title>Human herpesvirus 4 RefSeq Genome</Title>
-            <Publication date="1990-11-01T00:00:00Z" id="2171209" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1988-06-01T00:00:00Z" id="2835854" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1988-03-01T00:00:00Z" id="2840285" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1987-07-24T00:00:00Z" id="3039467" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1984-07-19T00:00:00Z" id="6087149" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-07-01T00:00:00Z" id="6092825" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-10-01T00:00:00Z" id="6094953" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-11-01T00:00:00Z" id="6094955" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1984-05-01T00:00:00Z" id="6203743" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1981-07-10T00:00:00Z" id="6269068" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1982-01-01T00:00:00Z" id="6296170" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-03-01T00:00:00Z" id="6300857" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-10-01T00:00:00Z" id="6310141" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1984-04-01T00:00:00Z" id="6327290" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1984-06-01T00:00:00Z" id="6328526" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1984-06-25T00:00:00Z" id="6330697" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1981-10-24T00:00:00Z" id="7301588" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="1983-01-01T00:00:00Z" id="10872327" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <Publication date="2003-05-29T00:00:00Z" id="12771413" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <RefSeq representation="eReference">
-                <AnnotationSource>
-                    <Name>NCBI annotation pipeline</Name>
-                </AnnotationSource>
-            </RefSeq>
-        </ProjectDescr>
-        <ProjectType>
-            <ProjectTypeSubmission>
-                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="10376" taxID="10376">
-                        <OrganismName>Human herpesvirus 4</OrganismName>
-                        <Supergroup>eViruses</Supergroup>
-                        <RepliconSet>
-                            <Replicon order="1">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name/>
-                                <Size units="Mb">0.171823</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">1</Count>
-                        </RepliconSet>
-                        <GenomeSize units="Kb">171.823000</GenomeSize>
-                    </Organism>
-                </Target>
-                <Method method_type="eOther"/>
-                <Objectives>
-                    <Data data_type="eAnnotation"/>
-                </Objectives>
-                <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
-                </ProjectDataTypeSet>
-            </ProjectTypeSubmission>
-        </ProjectType>
-    </Project>
-    <Submission submitted="2005-07-27">
-        <Description>
-            <!-- Submitter information has been removed -->
-            <Organization role="owner" type="center">
-                <Name abbr="Farrell P., Ludwig Institute for Cancer Research, St. Mary''s Hospital Medical School, Norfolk Place London W2 1PG">Farrell P., Ludwig Institute for Cancer Research, St. Mary''s Hospital Medical School, Norfolk Place London W2 1PG</Name>
-                <!-- Contact information has been removed -->
-            </Organization>
-            <Access>public</Access>
-        </Description>
-    </Submission>
-</DocumentSummary>
-
 <DocumentSummary uid="14527">
     <Project>
         <ProjectID>
@@ -680,7 +431,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Staphylococcus phage phiN315</Name>
-            <Title>Staphylococcus phage phiN315 RefSeq Genome</Title>
+            <Title>Staphylococcus phage phiN315 RefSeq Other</Title>
             <Publication date="2001-06-22T00:00:00Z" id="11418146" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -713,7 +464,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -745,8 +496,8 @@
             <ArchiveID accession="PRJNA14528" archive="NCBI" id="14528"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.2</Name>
-            <Title>Streptococcus pyogenes phage 315.2 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.2</Name>
+            <Title>Streptococcus phage 315.2 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -761,7 +512,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198539" taxID="198539">
-                        <OrganismName>Streptococcus pyogenes phage 315.2</OrganismName>
+                        <OrganismName>Streptococcus phage 315.2</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -779,7 +530,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -811,8 +562,8 @@
             <ArchiveID accession="PRJNA14529" archive="NCBI" id="14529"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.3</Name>
-            <Title>Streptococcus pyogenes phage 315.3 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.3</Name>
+            <Title>Streptococcus phage 315.3 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -827,7 +578,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198540" taxID="198540">
-                        <OrganismName>Streptococcus pyogenes phage 315.3</OrganismName>
+                        <OrganismName>Streptococcus phage 315.3</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -845,7 +596,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -877,8 +628,8 @@
             <ArchiveID accession="PRJNA14530" archive="NCBI" id="14530"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.4</Name>
-            <Title>Streptococcus pyogenes phage 315.4 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.4</Name>
+            <Title>Streptococcus phage 315.4 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -893,7 +644,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198541" taxID="198541">
-                        <OrganismName>Streptococcus pyogenes phage 315.4</OrganismName>
+                        <OrganismName>Streptococcus phage 315.4</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -911,7 +662,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -943,8 +694,8 @@
             <ArchiveID accession="PRJNA14531" archive="NCBI" id="14531"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.5</Name>
-            <Title>Streptococcus pyogenes phage 315.5 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.5</Name>
+            <Title>Streptococcus phage 315.5 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -959,7 +710,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198542" taxID="198542">
-                        <OrganismName>Streptococcus pyogenes phage 315.5</OrganismName>
+                        <OrganismName>Streptococcus phage 315.5</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -977,7 +728,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1009,8 +760,8 @@
             <ArchiveID accession="PRJNA14532" archive="NCBI" id="14532"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.6</Name>
-            <Title>Streptococcus pyogenes phage 315.6 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.6</Name>
+            <Title>Streptococcus phage 315.6 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -1025,7 +776,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198543" taxID="198543">
-                        <OrganismName>Streptococcus pyogenes phage 315.6</OrganismName>
+                        <OrganismName>Streptococcus phage 315.6</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -1043,7 +794,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1075,8 +826,8 @@
             <ArchiveID accession="PRJNA14533" archive="NCBI" id="14533"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Streptococcus pyogenes phage 315.1</Name>
-            <Title>Streptococcus pyogenes phage 315.1 RefSeq Genome</Title>
+            <Name>Streptococcus phage 315.1</Name>
+            <Title>Streptococcus phage 315.1 RefSeq Other</Title>
             <Publication date="2002-07-18T00:00:00Z" id="12122206" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -1091,7 +842,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="198538" taxID="198538">
-                        <OrganismName>Streptococcus pyogenes phage 315.1</OrganismName>
+                        <OrganismName>Streptococcus phage 315.1</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -1109,7 +860,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1142,7 +893,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Turnip rosette virus</Name>
-            <Title>Turnip rosette virus RefSeq Genome</Title>
+            <Title>Turnip rosette virus RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -1171,7 +922,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1188,6 +939,74 @@
     </Submission>
 </DocumentSummary>
 
+<DocumentSummary uid="14886">
+    <Project>
+        <ProjectID>
+            <ArchiveID accession="PRJNA14886" archive="NCBI" id="14886"/>
+        </ProjectID>
+        <ProjectDescr>
+            <Name>Mirafiori lettuce big-vein virus</Name>
+            <Title>Mirafiori lettuce big-vein virus RefSeq Other</Title>
+            <RefSeq representation="eReference">
+                <AnnotationSource>
+                    <Name>NCBI annotation pipeline</Name>
+                </AnnotationSource>
+            </RefSeq>
+        </ProjectDescr>
+        <ProjectType>
+            <ProjectTypeSubmission>
+                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
+                    <Organism species="200255" taxID="200255">
+                        <OrganismName>Mirafiori lettuce big-vein virus</OrganismName>
+                        <Supergroup>eViruses</Supergroup>
+                        <RepliconSet>
+                            <Replicon order="1">
+                                <Type location="eVirionPhage">eSegment</Type>
+                                <Name>RNA 1</Name>
+                                <Size units="Mb">0.007794</Size>
+                            </Replicon>
+                            <Replicon order="2">
+                                <Type location="eVirionPhage">eSegment</Type>
+                                <Name>RNA 2</Name>
+                                <Size units="Mb">0.001788</Size>
+                            </Replicon>
+                            <Replicon order="3">
+                                <Type location="eVirionPhage">eSegment</Type>
+                                <Name>RNA 3</Name>
+                                <Size units="Mb">0.001515</Size>
+                            </Replicon>
+                            <Replicon order="4">
+                                <Type location="eVirionPhage">eSegment</Type>
+                                <Name>RNA 4</Name>
+                                <Size units="Mb">0.001402</Size>
+                            </Replicon>
+                            <Count repliconType="eOther">4</Count>
+                        </RepliconSet>
+                        <GenomeSize units="Kb">12.499000</GenomeSize>
+                    </Organism>
+                </Target>
+                <Method method_type="eOther"/>
+                <Objectives>
+                    <Data data_type="eAnnotation"/>
+                </Objectives>
+                <ProjectDataTypeSet>
+                    <DataType>RefSeq Other</DataType>
+                </ProjectDataTypeSet>
+            </ProjectTypeSubmission>
+        </ProjectType>
+    </Project>
+    <Submission submitted="2005-07-27">
+        <Description>
+            <!-- Submitter information has been removed -->
+            <Organization role="owner" type="center">
+                <Name abbr="Plant Research International, Business Unit Biointeractions and Plant Health, Netherlands, Wageningen">Plant Research International, Business Unit Biointeractions and Plant Health, Netherlands, Wageningen</Name>
+                <!-- Contact information has been removed -->
+            </Organization>
+            <Access>public</Access>
+        </Description>
+    </Submission>
+</DocumentSummary>
+
 <DocumentSummary uid="15021">
     <Project>
         <ProjectID>
@@ -1195,7 +1014,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Bacillus phage phBC6A51</Name>
-            <Title>Bacillus phage phBC6A51 RefSeq Genome</Title>
+            <Title>Bacillus phage phBC6A51 RefSeq Other</Title>
             <Publication date="2003-05-02T00:00:00Z" id="12721630" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -1228,7 +1047,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1261,7 +1080,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Bacillus phage phBC6A52</Name>
-            <Title>Bacillus phage phBC6A52 RefSeq Genome</Title>
+            <Title>Bacillus phage phBC6A52 RefSeq Other</Title>
             <Publication date="2003-05-02T00:00:00Z" id="12721630" status="ePublished">
                 <Reference/>
                 <DbType>ePubmed</DbType>
@@ -1294,7 +1113,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1327,7 +1146,7 @@
         </ProjectID>
         <ProjectDescr>
             <Name>Murine hepatitis virus strain JHM</Name>
-            <Title>Murine hepatitis virus strain JHM RefSeq Genome</Title>
+            <Title>Murine hepatitis virus strain JHM RefSeq Other</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -1356,7 +1175,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1390,10 +1209,6 @@
         <ProjectDescr>
             <Name>Bacillus phage Cherry</Name>
             <Title>Bacillus phage Cherry</Title>
-            <Publication date="2006-04-20T00:00:00Z" id="16621835" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -1422,7 +1237,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1447,10 +1262,6 @@
         <ProjectDescr>
             <Name>Possum enterovirus W6</Name>
             <Title>Possum enterovirus W6</Title>
-            <Publication date="2006-08-15T00:00:00Z" id="16906477" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -1479,7 +1290,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1535,183 +1346,12 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
     </Project>
     <Submission submitted="2007-06-15">
-        <Description>
-            <!-- Submitter information has been removed -->
-            <Organization role="owner" type="center">
-                <Name abbr="NCBI">NCBI</Name>
-                <!-- Contact information has been removed -->
-            </Organization>
-            <Access>public</Access>
-        </Description>
-    </Submission>
-</DocumentSummary>
-
-<DocumentSummary uid="20647">
-    <Project>
-        <ProjectID>
-            <ArchiveID accession="PRJNA20647" archive="NCBI" id="20647"/>
-        </ProjectID>
-        <ProjectDescr>
-            <Name>Marine RNA virus SOG</Name>
-            <Title>Marine RNA virus SOG</Title>
-            <Publication date="2007-07-10T00:00:00Z" id="17617913" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <RefSeq representation="eReference">
-                <AnnotationSource>
-                    <Name>NCBI annotation pipeline</Name>
-                </AnnotationSource>
-            </RefSeq>
-        </ProjectDescr>
-        <ProjectType>
-            <ProjectTypeSubmission>
-                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="439014" taxID="439014">
-                        <OrganismName>Marine RNA virus SOG</OrganismName>
-                        <Supergroup>eViruses</Supergroup>
-                        <RepliconSet>
-                            <Replicon order="1">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name/>
-                                <Size units="Mb">0.004449</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">1</Count>
-                        </RepliconSet>
-                        <GenomeSize units="Kb">4.449000</GenomeSize>
-                    </Organism>
-                </Target>
-                <Method method_type="eOther"/>
-                <Objectives>
-                    <Data data_type="eAnnotation"/>
-                </Objectives>
-                <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
-                </ProjectDataTypeSet>
-            </ProjectTypeSubmission>
-        </ProjectType>
-    </Project>
-    <Submission submitted="2007-08-29">
-        <Description>
-            <!-- Submitter information has been removed -->
-            <Organization role="owner" type="center">
-                <Name abbr="NCBI">NCBI</Name>
-                <!-- Contact information has been removed -->
-            </Organization>
-            <Access>public</Access>
-        </Description>
-    </Submission>
-</DocumentSummary>
-
-<DocumentSummary uid="20649">
-    <Project>
-        <ProjectID>
-            <ArchiveID accession="PRJNA20649" archive="NCBI" id="20649"/>
-        </ProjectID>
-        <ProjectDescr>
-            <Name>Marine RNA virus JP-A</Name>
-            <Title>Marine RNA virus JP-A</Title>
-            <Publication date="2007-07-10T00:00:00Z" id="17617913" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <RefSeq representation="eReference">
-                <AnnotationSource>
-                    <Name>NCBI annotation pipeline</Name>
-                </AnnotationSource>
-            </RefSeq>
-        </ProjectDescr>
-        <ProjectType>
-            <ProjectTypeSubmission>
-                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="439015" taxID="439015">
-                        <OrganismName>Marine RNA virus JP-A</OrganismName>
-                        <Supergroup>eViruses</Supergroup>
-                        <RepliconSet>
-                            <Replicon order="1">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name/>
-                                <Size units="Mb">0.009236</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">1</Count>
-                        </RepliconSet>
-                        <GenomeSize units="Kb">9.236000</GenomeSize>
-                    </Organism>
-                </Target>
-                <Method method_type="eOther"/>
-                <Objectives>
-                    <Data data_type="eAnnotation"/>
-                </Objectives>
-                <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
-                </ProjectDataTypeSet>
-            </ProjectTypeSubmission>
-        </ProjectType>
-    </Project>
-    <Submission submitted="2007-08-29">
-        <Description>
-            <!-- Submitter information has been removed -->
-            <Organization role="owner" type="center">
-                <Name abbr="NCBI">NCBI</Name>
-                <!-- Contact information has been removed -->
-            </Organization>
-            <Access>public</Access>
-        </Description>
-    </Submission>
-</DocumentSummary>
-
-<DocumentSummary uid="20651">
-    <Project>
-        <ProjectID>
-            <ArchiveID accession="PRJNA20651" archive="NCBI" id="20651"/>
-        </ProjectID>
-        <ProjectDescr>
-            <Name>Marine RNA virus JP-B</Name>
-            <Title>Marine RNA virus JP-B</Title>
-            <Publication date="2007-07-10T00:00:00Z" id="17617913" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <RefSeq representation="eReference">
-                <AnnotationSource>
-                    <Name>NCBI annotation pipeline</Name>
-                </AnnotationSource>
-            </RefSeq>
-        </ProjectDescr>
-        <ProjectType>
-            <ProjectTypeSubmission>
-                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="439016" taxID="439016">
-                        <OrganismName>Marine RNA virus JP-B</OrganismName>
-                        <Supergroup>eViruses</Supergroup>
-                        <RepliconSet>
-                            <Replicon order="1">
-                                <Type location="eVirionPhage">eSegment</Type>
-                                <Name/>
-                                <Size units="Mb">0.008926</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">1</Count>
-                        </RepliconSet>
-                        <GenomeSize units="Kb">8.926000</GenomeSize>
-                    </Organism>
-                </Target>
-                <Method method_type="eOther"/>
-                <Objectives>
-                    <Data data_type="eAnnotation"/>
-                </Objectives>
-                <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
-                </ProjectDataTypeSet>
-            </ProjectTypeSubmission>
-        </ProjectType>
-    </Project>
-    <Submission submitted="2007-08-29">
         <Description>
             <!-- Submitter information has been removed -->
             <Organization role="owner" type="center">
@@ -1729,7 +1369,7 @@
             <ArchiveID accession="PRJNA28503" archive="NCBI" id="28503"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Vibrio phage kappa</Name>
+            <Name>Vibrio virus Kappa</Name>
             <Title>Vibrio phage kappa</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
@@ -1741,7 +1381,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="493906" taxID="493906">
-                        <OrganismName>Vibrio phage kappa</OrganismName>
+                        <OrganismName>Vibrio virus Kappa</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -1759,7 +1399,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1816,7 +1456,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1841,10 +1481,6 @@
         <ProjectDescr>
             <Name>Mycobacterium phage BPs</Name>
             <Title>Mycobacterium phage BPs</Title>
-            <Publication date="2009-06-27T00:00:00Z" id="19556295" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -1873,7 +1509,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1926,7 +1562,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -1984,7 +1620,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2037,7 +1673,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2090,7 +1726,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2143,7 +1779,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2168,10 +1804,6 @@
         <ProjectDescr>
             <Name>Helicoverpa armigera NPV NNg1</Name>
             <Title>Helicoverpa armigera NPV NNg1</Title>
-            <Publication date="2009-07-28T00:00:00Z" id="19634008" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -2200,7 +1832,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2257,7 +1889,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2314,7 +1946,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2337,7 +1969,7 @@
             <ArchiveID accession="PRJNA32273" archive="NCBI" id="32273"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Enterobacteria phage Fels-2</Name>
+            <Name>Salmonella virus Fels2</Name>
             <Title>Enterobacteria phage Fels-2</Title>
             <Publication date="2001-10-26T00:00:00Z" id="11677609" status="ePublished">
                 <Reference/>
@@ -2353,7 +1985,7 @@
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
                     <Organism species="194701" taxID="194701">
-                        <OrganismName>Salmonella phage Fels-2</OrganismName>
+                        <OrganismName>Salmonella virus Fels2</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
@@ -2371,7 +2003,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2424,7 +2056,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2477,7 +2109,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2530,7 +2162,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2583,7 +2215,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2600,20 +2232,14 @@
     </Submission>
 </DocumentSummary>
 
-<DocumentSummary uid="41333">
+<DocumentSummary uid="62741">
     <Project>
         <ProjectID>
-            <ArchiveID accession="PRJNA41333" archive="NCBI" id="41333"/>
+            <ArchiveID accession="PRJNA62741" archive="NCBI" id="62741"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Aggregatibacter actinomycetemcomitans D11S-1</Name>
-            <Title>Aggregatibacter actinomycetemcomitans D11S-1 RefSeq Genome</Title>
-            <Description>&lt;P&gt;&lt;B&gt;&lt;I&gt;Aggregatibacter actinomycetemcomitans&lt;/I&gt; D11S-1&lt;/B&gt;. &lt;I&gt;Aggregatibacter actinomycetemcomitans&lt;/I&gt; D11S-1 was recovered from a subject with aggressive periodontitis.</Description>
-            <Publication date="2009-10-13T00:00:00Z" id="19820097" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
-            <ProjectReleaseDate>2009-10-16T00:00:00Z</ProjectReleaseDate>
+            <Name>Tomato mottle leaf curl Zulia virus</Name>
+            <Title>Tomato mottle leaf curl Zulia virus</Title>
             <RefSeq representation="eReference">
                 <AnnotationSource>
                     <Name>NCBI annotation pipeline</Name>
@@ -2623,29 +2249,18 @@
         <ProjectType>
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="714" taxID="668336">
-                        <OrganismName>Aggregatibacter actinomycetemcomitans D11S-1</OrganismName>
-                        <Strain>D11S-1</Strain>
-                        <Supergroup>eBacteria</Supergroup>
+                    <Organism species="979781" taxID="979781">
+                        <OrganismName>Tomato mottle leaf curl Zulia virus</OrganismName>
+                        <Supergroup>eViruses</Supergroup>
                         <RepliconSet>
                             <Replicon order="1">
-                                <Type location="eNuclearProkaryote">eChromosome</Type>
-                                <Name/>
-                                <Size units="Mb">2.100000</Size>
+                                <Type location="eVirionPhage">eSegment</Type>
+                                <Name>DNA-A</Name>
+                                <Size units="Kb">2.625000</Size>
                             </Replicon>
-                            <Replicon order="2">
-                                <Type location="eNuclearProkaryote">ePlasmid</Type>
-                                <Name>S25</Name>
-                                <Size units="Mb">0.031000</Size>
-                            </Replicon>
-                            <Replicon order="3">
-                                <Type location="eNuclearProkaryote">ePlasmid</Type>
-                                <Name>S57</Name>
-                                <Size units="Mb">0.024000</Size>
-                            </Replicon>
-                            <Count repliconType="eOther">3</Count>
+                            <Count repliconType="eOther">1</Count>
                         </RepliconSet>
-                        <GenomeSize units="Kb">2200.000000</GenomeSize>
+                        <GenomeSize units="Kb">2625000.000000</GenomeSize>
                     </Organism>
                 </Target>
                 <Method method_type="eOther"/>
@@ -2653,12 +2268,12 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
     </Project>
-    <Submission submitted="2009-10-22">
+    <Submission submitted="2011-02-10">
         <Description>
             <!-- Submitter information has been removed -->
             <Organization role="owner" type="center">
@@ -2668,15 +2283,6 @@
             <Access>public</Access>
         </Description>
     </Submission>
-    <ProjectLinks>
-        <Link>
-            <ProjectIDRef archive="NCBI" id="41333" accession="PRJNA41333"/>
-            <PeerProject>
-                <CommonInputData>eRefseqGenbank</CommonInputData>
-                <MemberID archive="NCBI" id="40107" accession="PRJNA40107"/>
-            </PeerProject>
-        </Link>
-    </ProjectLinks>
 </DocumentSummary>
 
 <DocumentSummary uid="162501">
@@ -2711,7 +2317,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2741,10 +2347,6 @@
             <Name>Grapevine geminivirus</Name>
             <Title>Grapevine geminivirus RefSeq Genome</Title>
             <Description>Grapevine geminivirus genome reference project</Description>
-            <Publication date="2012-06-27T00:00:00Z" id="22733880" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -2768,7 +2370,7 @@
                     <Data data_type="eAnnotation"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Other</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -2798,10 +2400,6 @@
             <Name>Bean necrotic mosaic virus</Name>
             <Title>Bean necrotic mosaic virus RefSeq Genome</Title>
             <Description>Bean necrotic mosaic virus genome reference project</Description>
-            <Publication date="2012-06-21T00:00:00Z" id="22715400" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -2846,6 +2444,59 @@
     </Submission>
 </DocumentSummary>
 
+<DocumentSummary uid="175586">
+    <Project>
+        <ProjectID>
+            <ArchiveID accession="PRJNA175586" archive="NCBI" id="175586"/>
+        </ProjectID>
+        <ProjectDescr>
+            <Name>Porcine stool-associated circular virus</Name>
+            <Title>Porcine associated stool circular virus RefSeq Genome</Title>
+            <Description>Porcine associated stool circular virus genome reference project</Description>
+            <Relevance>
+                <Evolution>Evolution1</Evolution>
+            </Relevance>
+            <LocusTagPrefix>C713</LocusTagPrefix>
+            <RefSeq representation="eReference">
+                <AnnotationSource>
+                    <Name>NCBI annotation</Name>
+                </AnnotationSource>
+            </RefSeq>
+        </ProjectDescr>
+        <ProjectType>
+            <ProjectTypeSubmission>
+                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
+                    <Organism species="1231387" taxID="1843773">
+                        <OrganismName>Porcine stool-associated circular virus</OrganismName>
+                        <Supergroup>eViruses</Supergroup>
+                    </Organism>
+                </Target>
+                <Method method_type="eSequencing"/>
+                <Objectives>
+                    <Data data_type="eAnnotation"/>
+                </Objectives>
+                <ProjectDataTypeSet>
+                    <DataType>RefSeq Genome</DataType>
+                </ProjectDataTypeSet>
+            </ProjectTypeSubmission>
+        </ProjectType>
+    </Project>
+    <Submission last_update="2012-09-20" submitted="2012-02-29" submission_id="SUB131500">
+        <Description>
+            <!-- Submitter information has been removed -->
+            <Organization role="participant" type="institute">
+                <Name>School of Biological Sciences, University of Canterbury</Name>
+                <!-- Contact information has been removed -->
+            </Organization>
+            <Organization role="owner" type="center" url="http://www.ncbi.nlm.nih.gov/">
+                <Name abbr="NCBI Genome Project">NCBI RefSeq Genome Project</Name>
+            </Organization>
+            <Access>public</Access>
+        </Description>
+        <Action action_id="SUB131500-1"/>
+    </Submission>
+</DocumentSummary>
+
 <DocumentSummary uid="178590">
     <Project>
         <ProjectID>
@@ -2855,10 +2506,6 @@
             <Name>Tomato leaf curl Peru virus</Name>
             <Title>Tomato leaf curl Peru virus RefSeq Genome</Title>
             <Description>Tomato leaf curl Peru virus genome reference project</Description>
-            <Publication date="2013-03-08T00:00:00Z" id="23468482" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -2963,7 +2610,7 @@
             <ArchiveID accession="PRJNA195500" archive="NCBI" id="195500"/>
         </ProjectID>
         <ProjectDescr>
-            <Name>Cyanophage KBS-M-1A</Name>
+            <Name>Synechococcus phage KBS-M-1A</Name>
             <Title>Cyanophage KBS-M-1A genome sequencing project</Title>
             <Description>CAMERA project</Description>
             <LocusTagPrefix>K182</LocusTagPrefix>
@@ -2987,7 +2634,7 @@
                     <Data data_type="eAssembly"/>
                 </Objectives>
                 <ProjectDataTypeSet>
-                    <DataType>RefSeq Genome</DataType>
+                    <DataType>RefSeq Genome sequencing</DataType>
                 </ProjectDataTypeSet>
             </ProjectTypeSubmission>
         </ProjectType>
@@ -3182,13 +2829,9 @@
             <LocalID>1195084</LocalID>
         </ProjectID>
         <ProjectDescr>
-            <Name>Salmonella phage Chi</Name>
+            <Name>Salmonella virus Chi</Name>
             <Title>Enterobacteria phage Chi RefSeq Genome</Title>
             <Description>Enterobacteria phage Chi genome reference project</Description>
-            <Publication date="2013-04-23T00:00:00Z" id="23605589" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -3202,8 +2845,8 @@
         <ProjectType>
             <ProjectTypeSubmission>
                 <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
-                    <Organism species="1195084" taxID="1195084">
-                        <OrganismName>Salmonella phage Chi</OrganismName>
+                    <Organism species="1195084" taxID="1541887">
+                        <OrganismName>Salmonella virus Chi</OrganismName>
                         <Supergroup>eViruses</Supergroup>
                     </Organism>
                 </Target>
@@ -3243,10 +2886,6 @@
             <Name>Cyclovirus VN</Name>
             <Title>Cyclovirus VN RefSeq Genome</Title>
             <Description>Cyclovirus VN genome reference project</Description>
-            <Publication date="2013-06-20T00:00:00Z" id="23781068" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -3301,10 +2940,6 @@
             <Name>Mannheimia phage vB_MhM_1152AP</Name>
             <Title>Mannheimia phage vB_MhM_1152AP RefSeq Genome</Title>
             <Description>Mannheimia phage vB_MhM_1152AP genome reference project</Description>
-            <Publication date="2013-03-16T00:00:00Z" id="23489937" status="ePublished">
-                <Reference/>
-                <DbType>ePubmed</DbType>
-            </Publication>
             <Relevance>
                 <Evolution>Evolution1</Evolution>
             </Relevance>
@@ -3454,6 +3089,60 @@
             <Access>public</Access>
         </Description>
         <Action action_id="SUB317464-1"/>
+    </Submission>
+</DocumentSummary>
+
+<DocumentSummary uid="217880">
+    <Project>
+        <ProjectID>
+            <ArchiveID accession="PRJNA217880" archive="NCBI" id="217880"/>
+            <LocalID>1392387</LocalID>
+        </ProjectID>
+        <ProjectDescr>
+            <Name>Sweet potato leaf curl Japan virus</Name>
+            <Title>Sweet potato leaf curl Japan virus RefSeq Genome</Title>
+            <Description>Sweet potato leaf curl Japan virus genome reference project</Description>
+            <Relevance>
+                <Evolution>Evolution1</Evolution>
+            </Relevance>
+            <LocusTagPrefix>P361</LocusTagPrefix>
+            <RefSeq representation="eReference">
+                <AnnotationSource>
+                    <Name>NCBI annotation</Name>
+                </AnnotationSource>
+            </RefSeq>
+        </ProjectDescr>
+        <ProjectType>
+            <ProjectTypeSubmission>
+                <Target capture="eWhole" material="eGenome" sample_scope="eMonoisolate">
+                    <Organism species="1392387" taxID="1392387">
+                        <OrganismName>Sweet potato leaf curl Japan virus</OrganismName>
+                        <Supergroup>eViruses</Supergroup>
+                    </Organism>
+                </Target>
+                <Method method_type="eSequencing"/>
+                <Objectives>
+                    <Data data_type="eAnnotation"/>
+                </Objectives>
+                <ProjectDataTypeSet>
+                    <DataType>RefSeq Genome</DataType>
+                </ProjectDataTypeSet>
+            </ProjectTypeSubmission>
+        </ProjectType>
+    </Project>
+    <Submission last_update="2013-09-02" submitted="2013-09-02" submission_id="SUB333045">
+        <Description>
+            <!-- Submitter information has been removed -->
+            <Organization role="participant" type="institute">
+                <Name>Institute of Plant Protection, Henan Academy of Agricultural Sciences</Name>
+                <!-- Contact information has been removed -->
+            </Organization>
+            <Organization role="owner" type="center" url="http://www.ncbi.nlm.nih.gov/">
+                <Name abbr="NCBI Genome Project">NCBI RefSeq Genome Project</Name>
+            </Organization>
+            <Access>public</Access>
+        </Description>
+        <Action action_id="SUB333045-1"/>
     </Submission>
 </DocumentSummary>
 
