@@ -37,15 +37,10 @@ ENV PATH ${PATH}:${VALIDATOR}
 #download yaml schema
 RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
 
-
-
 #download the latest version of MetaPhlAn2
-RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://bitbucket.org/biobakery/metaphlan2/get/94840c29be6b.zip
+RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip https://www.dropbox.com/s/ztqr8qgbo727zpn/metaphlan2.zip?dl=0
 RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
 RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
-RUN mv ${PREFIX}/src/biobakery-metaphlan2* ${PREFIX}/src/${TOOLNAME}
-
-
 
 ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
