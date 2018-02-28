@@ -10,7 +10,7 @@ ENV TOOLNAME quickr
 RUN apt-get -q update && apt-get upgrade -q -y -o DPkg::Options::=--force-confnew
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget g++ build-essential software-properties-common python-software-properties git julia hdf5-tools gzip hmmer patch make xz-utils ca-certificates
+ENV PACKAGES wget g++ build-essential software-properties-common git julia hdf5-tools gzip hmmer patch make xz-utils ca-certificates
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
@@ -40,9 +40,6 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 
 
 #install dependencies
-RUN add-apt-repository -y ppa:staticfloat/juliareleases
-RUN add-apt-repository -y ppa:staticfloat/julia-deps
-#~ RUN git config --global url."https://".insteadOf git://
 RUN julia -e 'Pkg.add("HDF5"); Pkg.add("ArgParse");'
 
 # cleanup all temporary data 
