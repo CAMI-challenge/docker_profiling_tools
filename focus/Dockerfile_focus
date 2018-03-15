@@ -37,7 +37,8 @@ ENV PATH ${PATH}:${VALIDATOR}
 #download yaml schema
 RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
 
-
+RUN wget -q -O ${PREFIX}/bin/jellyfish https://github.com/gmarcais/Jellyfish/releases/download/v2.2.9/jellyfish-2.2.9-linux-static
+RUN chmod a+x ${PREFIX}/bin/jellyfish
 
 #update program to Stefans standards
 RUN ln -s /home/ ${PREFIX}/src/${TOOLNAME}

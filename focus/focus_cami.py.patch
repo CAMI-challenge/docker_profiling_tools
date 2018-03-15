@@ -1,6 +1,14 @@
---- focus_cami.py	2015-12-10 16:16:57.727059629 +0100
-+++ focus_cami.py.new	2015-12-10 16:18:03.228977531 +0100
-@@ -72,8 +72,8 @@
+--- focus_cami.py	2018-03-15 11:21:18.386103622 +0100
++++ focus_cami.py.new	2018-03-15 11:24:35.578533087 +0100
+@@ -2,6 +2,7 @@
+ from numpy import array,linspace,zeros,eye,concatenate,sum as SUM,linalg
+ from scipy.optimize import nnls
+ import os,sys,random
++import subprocess
+ 
+ ##############################
+ #  Program Defaults parameters#
+@@ -72,8 +73,8 @@
      print "Jellyfish not installed. Please download it at http://www.cbcb.umd.edu/software/jellyfish"    
      
  #check if the query exists or if it is adding genome to the db
@@ -11,7 +19,16 @@
  
  #check if jellyfish is installed
  elif which("jellyfish")==None:
-@@ -209,7 +209,7 @@
+@@ -108,7 +109,7 @@
+                     os.system("jellyfish dump "+randomID+"_kmer_counting_0 -c > "+randomID+"_query")
+             else:
+                 os.system("jellyfish count -m "+parameters["-k"]+" -o "+randomID+"_kmer_counting -s 100M -t 32 -C --disk "+parameters["-q"])
+-                os.system("jellyfish dump "+randomID+"_kmer_counting -c > "+randomID+"_query")
++                subprocess.call(["bash", "-c", "jellyfish dump <(cat " + randomID + "_kmer_counting*) -c > " + randomID + "_query"])
+ 
+             #loads the mers that we need in the order that we need
+             ##########################################################
+@@ -209,7 +210,7 @@
                      c+=1
  
                  #Writes tabular output!
