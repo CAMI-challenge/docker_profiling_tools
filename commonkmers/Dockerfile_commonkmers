@@ -10,9 +10,9 @@ ENV TOOLNAME commonkmers
 #RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES curl
+#ENV PACKAGES curl
 #install dependencies
-RUN apt-get install -y --no-install-recommends ${PACKAGES}
+#RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
 #install dependencies
 
