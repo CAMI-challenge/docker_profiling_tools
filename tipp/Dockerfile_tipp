@@ -10,7 +10,7 @@ ENV TOOLNAME tipp
 RUN apt-get update -y
 
 #list of all dependencies that can be satisfied via the package management system of Ubuntu
-ENV PACKAGES wget curl bc unzip python default-jre ncbi-blast+ git seqtk make xz-utils ca-certificates
+ENV PACKAGES wget curl bc unzip python default-jre ncbi-blast+ git seqtk make xz-utils ca-certificates python-setuptools
 #install dependencies
 RUN apt-get install -y --no-install-recommends ${PACKAGES}
 
@@ -40,7 +40,7 @@ RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbe
 
 
 #downloading marker
-RUN wget -q -O ${PREFIX}/share/tipp.zip www.cs.utexas.edu/~phylo/software/sepp/tipp.zip
+RUN wget -q -O ${PREFIX}/share/tipp.zip https://github.com/tandyw/tipp-reference/releases/download/v2.0.0/tipp.zip
 RUN unzip -d ${PREFIX}/share/ ${PREFIX}/share/tipp.zip
 RUN rm -f ${PREFIX}/share/tipp.zip
 RUN tar xzvf ${PREFIX}/share/${TOOLNAME}/refpkg.tar.gz -C ${PREFIX}/share/${TOOLNAME}/
@@ -50,22 +50,12 @@ ENV BLAST /usr/bin/blastn
 #install SEPP
 RUN git config --global url."https://".insteadOf git://
 RUN git clone https://github.com/smirarab/sepp ${PREFIX}/src/sepp
-RUN cd ${PREFIX}/src/sepp && python setup.py install && python setup.py config
-ENV PATH=${HOME}/.sepp/bundled-v3.0/:${PATH}
-
-#download TIPP
-RUN wget -q -O ${PREFIX}/src/${TOOLNAME}.zip http://www.cs.utexas.edu/~phylo/software/sepp/tipp-submission/master.zip
-#extract downloaded archive
-RUN unzip -d ${PREFIX}/src/ ${PREFIX}/src/${TOOLNAME}.zip
-RUN mv ${PREFIX}/src/sepp-master* ${PREFIX}/src/${TOOLNAME}
-RUN rm -f ${PREFIX}/src/${TOOLNAME}.zip
-RUN sed -i "s/version = \"2.2.1\"/version = \"3.0\"/" ${PREFIX}/src/${TOOLNAME}/setup.py
-RUN cd ${PREFIX}/src/${TOOLNAME} && python setup.py tipp
-
 #change TIPP such that it print taxonids instead of taxon names
-RUN sed -i "s/tax_name/tax_id/" /usr/local/lib/python2.7/dist-packages/sepp-3.0-py2.7.egg/sepp/metagenomics.py
+RUN sed -i "s/tax_name/tax_id/" ${PREFIX}/src/sepp/sepp/metagenomics.py
+RUN cd ${PREFIX}/src/sepp && python setup.py config -c && python setup.py install
 
-
+#install TIPP
+RUN cd ${PREFIX}/src/sepp && python setup.py tipp -c
 
 ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 #download the NCBI taxonomy from NCBI's FTP server
