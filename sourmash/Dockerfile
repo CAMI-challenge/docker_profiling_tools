@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
 ENV TOOLNAME sourmash
+ENV TOOLVERSION 3.2.2
 
 RUN apt-get update -y
 
@@ -29,13 +30,19 @@ ENV PATH ${PATH}:${VALIDATOR}
 
 RUN wget -q -O ${PREFIX}/share/schema.yaml https://raw.githubusercontent.com/pbelmann/rfc/feature/new-profiling-inteface/container/profiling/schema.yaml
 
-RUN python3 -m pip install sourmash pandas taxonomy
+ENV PYTHON_PACKAGES taxonomy==0.4.1 pandas==1.0.1
+RUN python3 -m pip install sourmash==${TOOLVERSION}
+RUN python3 -m pip install ${PYTHON_PACKAGES}
 
 ENV GITHUB https://raw.githubusercontent.com/CAMI-challenge/docker_profiling_tools/master/
 RUN wget -q -O ${PREFIX}/lib/Utils.pm ${GITHUB}/Utils.pm
 RUN wget -q -O ${PREFIX}/lib/YAMLsj.pm ${GITHUB}/YAMLsj.pm
-ADD gather-to-opal.py ${PREFIX}/bin/convert.py
+
 ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
+
+ENV GITHUB_CONVERT https://raw.githubusercontent.com/dib-lab/2019-12-12-sourmash_viz/master/
+RUN wget -q -O ${PREFIX}/bin/convert.py ${GITHUB_CONVERT}/gather-to-opal.py
+RUN chmod +x ${PREFIX}/bin/convert.py
 
 ENV YAML "/bbx/mnt/input/biobox.yaml"
 ENTRYPOINT ["task.pl"]
