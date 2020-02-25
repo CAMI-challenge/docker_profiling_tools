@@ -41,7 +41,7 @@ RUN wget -q -O ${PREFIX}/lib/YAMLsj.pm ${GITHUB}/YAMLsj.pm
 ADD task_${TOOLNAME}.pl ${PREFIX}/bin/task.pl
 
 ENV GITHUB_CONVERT https://raw.githubusercontent.com/dib-lab/2019-12-12-sourmash_viz/master/
-RUN wget -q -O ${PREFIX}/bin/convert.py ${GITHUB_CONVERT}/gather-to-opal.py
+RUN wget -q -O ${PREFIX}/bin/convert.py ${GITHUB_CONVERT}/src/gather_to_opal.py
 RUN chmod +x ${PREFIX}/bin/convert.py
 
 ENV YAML "/bbx/mnt/input/biobox.yaml"
