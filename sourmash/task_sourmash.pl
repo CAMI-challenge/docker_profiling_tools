@@ -15,8 +15,8 @@ foreach my $task (@tasks) {
   $id =~ s|/|_|g;
 
   push @{$task->{commands}}, (
-    "sourmash compute --scaled 2000 -k 51 --track-abundance --name-from-first -o ".$task->{resultfilename}.".sig ".$task->{inputfile},
-    "sourmash gather --scaled 2000 -k 51 --output ".$task->{resultfilename}.".csv ".$task->{resultfilename}.".sig ".$task->{databaseDir}."/genbank-d2-k51.sbt.json",
+    "sourmash compute --scaled 10000 -k 51 --track-abundance --name-from-first -o ".$task->{resultfilename}.".sig ".$task->{inputfile},
+    "sourmash gather --scaled 10000 -k 51 --output ".$task->{resultfilename}.".csv ".$task->{resultfilename}.".sig ".$task->{databaseDir}."/genbank-d2-k51.sbt.json",
     "rm ".$task->{resultfilename}.".sig",
     $ENV{PREFIX}."/bin/convert.py --output ".$task->{resultfilename}.".profile".
     " --taxdump ".$task->{taxonomyDir}.
